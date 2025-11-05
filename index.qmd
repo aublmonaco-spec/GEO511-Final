@@ -211,10 +211,9 @@ rthearly27 <- rth_early %>%
   filter(Latitude >= 27 & Latitude < 30) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
   
-  
 rthearly30 <- rth_early %>%
   filter(Latitude > 30 & Latitude < 33) %>%
-  mutate(mean30 = mean(year_day, na.rm = TRUE)) 
+  mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly33 <- rth_early %>%
   filter(Latitude >= 33 & Latitude < 36) %>%
@@ -222,7 +221,7 @@ rthearly33 <- rth_early %>%
 
 rthearly36 <- rth_early %>%
   filter(Latitude > 36 & Latitude < 39) %>%
-  mutate(mean36 = mean(year_day, na.rm = TRUE))
+  mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly39 <- rth_early %>%
   filter(Latitude >= 39 & Latitude < 42) %>%
@@ -230,7 +229,7 @@ rthearly39 <- rth_early %>%
   
 rthearly42 <- rth_early %>%
   filter(Latitude > 42 & Latitude < 45.28700) %>%
-  mutate(mean42 = mean(year_day, na.rm = TRUE)) 
+  mutate(mean = mean(year_day, na.rm = TRUE)) 
   
 
 rthearly1 <- rthearly24 %>% full_join(rthearly27)
@@ -313,7 +312,7 @@ rubythroat_all <- rth_4 %>% full_join(rth_5)
 
 cpal <- colorNumeric(palette = "rocket", domain = card_fl_all$difference, na.color = NA, reverse = TRUE)
 
-rpal <- colorNumeric(palette = "mako", domain = rubythroat_all$difference, na.color = NA)
+rpal <- colorNumeric(palette = "mako", domain = rubythroat_all$mean, na.color = NA)
  
 ```
 
@@ -333,9 +332,10 @@ leaflet(card_fl_all) %>%
 leaflet(rubythroat_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~Longitude, ~ Latitude, radius = 1, color = ~rpal(difference)) %>%
-  addLegend(pal = rpal, values = ~difference, title = "Difference From 2010-2014 Average (days)", position = "bottomleft") 
+  addCircleMarkers(~Longitude, ~ Latitude, radius = 1, color = ~rpal(mean)) %>%
+  addLegend(pal = rpal, values = ~mean, title = "Average Day of Arrival (Year Day)", position = "bottomleft") 
 ```
+
 
 ## Download and clean all required data
 
