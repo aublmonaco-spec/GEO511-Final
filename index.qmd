@@ -93,7 +93,7 @@ cardinal_flower <- cardinal_flower %>%
 4. I found the mean date of first sightings of cardinal flowers from 2010 to 2014 and from January to May (when ruby-throats migrate north) to compare data from the last 10 years to. The mean date of cardinal flower sighting was March 10th (the 69th day of the year).
 ```{r, message=FALSE, warning=FALSE}
 cf_early <- cardinal_flower %>%
-  filter(year %in% c(2010, 2011, 2012, 2013, 2014) & month %in% c(6, 7, 8, 9))
+  filter(year %in% c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & month %in% c(6, 7, 8, 9))
 
 cf_early_27 <- cf_early %>%
   filter(latitude >= 28.13680 & latitude < 33) %>%
@@ -122,12 +122,12 @@ cfearly3 <- cfearly2 %>% full_join(cf_early_42)
 cardinal_flower_early <- cfearly3 %>% full_join(cfearly1)
 
 cardinal_flower_early <- cardinal_flower_early %>%
-  mutate(mean1014 = case_when(latitude >= 28.03844 & latitude < 33 ~ 256.5172
+  mutate(mean1014 = case_when(latitude >= 28.03844 & latitude < 33 ~ 252.4143
 ,
-                          latitude > 33 & latitude < 36 ~ 238.0811,
-                          latitude > 36 & latitude < 39 ~ 231.8,
-                          latitude > 39 & latitude < 42 ~ 225.4737,
-                          latitude > 42 & latitude < 47.67724 ~ 226.3913)) %>%
+                          latitude > 33 & latitude < 36 ~ 239.5887,
+                          latitude > 36 & latitude < 39 ~ 235.5704,
+                          latitude > 39 & latitude < 42 ~ 228.5022,
+                          latitude > 42 & latitude < 47.67724 ~ 229.7445)) %>%
   mutate(mean_early = as.numeric(mean1014))
 
 
@@ -138,13 +138,13 @@ cardinal_flower <- cardinal_flower %>% full_join(cardinal_flower_early)
 5. I created the dataset to see trends between 2015 and 2025, and in months Janurary to May. I separated sightings into 5 bands of latitude (in increments of approxiamtely 3, excepting 27 to 33, since there were so few observations). I rejoined all of these bands into one dataset to plot on a map. I also created a difference column, showing the difference in days of arrival between the new dataset and the 2010 to 2014 average using mean - mean1014.
 ```{r, message=FALSE, warning=FALSE}
 cardinal_flower_new <- cardinal_flower %>%
-  filter(year %in% c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(7, 8, 9)) %>%
-  mutate(mean1014 = case_when(latitude >= 25.75613 & latitude < 33 ~ 256.5172
+  filter(year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(7, 8, 9)) %>%
+  mutate(mean1014 = case_when(latitude >= 25.75613 & latitude < 33 ~ 252.4143
 ,
-                          latitude > 33 & latitude < 36 ~ 238.0811,
-                          latitude > 36 & latitude < 39 ~ 231.8,
-                          latitude > 39 & latitude < 42 ~ 225.4737,
-                          latitude > 42 & latitude < 46.64694 ~ 226.3913))
+                          latitude > 33 & latitude < 36 ~ 239.5887,
+                          latitude > 36 & latitude < 39 ~ 235.5704,
+                          latitude > 39 & latitude < 42 ~ 228.5022,
+                          latitude > 42 & latitude < 46.64694 ~ 229.7445))
 
 card_fl_27 <- cardinal_flower_new %>%
   filter(latitude >= 25.75613 & latitude < 33) %>%
@@ -201,7 +201,7 @@ ruby_throat <- rth_all %>%
   mutate(year_day = yday(Date))
 
 rth_early <- ruby_throat %>%
-  filter(Year %in% c(1995, 1997, 1998, 2000, 2001, 2002, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & Month %in% c(2, 3, 4, 5))
+  filter(Year %in% c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & Month %in% c(2, 3, 4, 5))
 
 rthearly24 <- rth_early %>%
   filter(Latitude >= 24.62760 & Latitude < 27) %>%
@@ -249,14 +249,14 @@ ruby_throat_all <- ruby_throat %>% full_join(rth_early)
 ```{r, message=FALSE, warning=FALSE}
 
 rth_all <- ruby_throat_all %>%
-  filter(Year %in% c(2015, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025) & Month %in% c(2, 3, 4, 5)) %>%
-  mutate(mean1014 = case_when(Latitude >= 24.54630 & Latitude < 27 ~ 109,
-                              Latitude > 27 & Latitude < 30 ~ 111.6538,
-                              Latitude > 30 & Latitude < 33 ~ 107.5926,
-                              Latitude > 33 & Latitude < 36 ~ 117.7778,
-                              Latitude > 36 & Latitude < 39 ~ 124.5556,
-                              Latitude > 39 & Latitude < 42 ~ 131.6154,
-                              Latitude > 42 & Latitude <= 48.08812 ~ 142.0667
+  filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2025) & Month %in% c(2, 3, 4, 5)) %>%
+  mutate(mean1014 = case_when(Latitude >= 24.54630 & Latitude < 27 ~ 110.2414,
+                              Latitude > 27 & Latitude < 30 ~ 108.4896,
+                              Latitude > 30 & Latitude < 33 ~ 99.69231,
+                              Latitude > 33 & Latitude < 36 ~ 104.48,
+                              Latitude > 36 & Latitude < 39 ~ 125.4231,
+                              Latitude > 39 & Latitude < 42 ~ 133.2071,
+                              Latitude > 42 & Latitude <= 48.08812 ~ 138.1829
                               )) %>%
   mutate(mean_early = as.numeric(mean1014))
 
@@ -310,30 +310,30 @@ rubythroat_all <- rth_4 %>% full_join(rth_5)
 8. I then created color palettes using viridis scales and colorNumeric from the Leaflet package for my two maps, specifying to use the difference column in each dataset to map the colors to.
 ```{r}
 
-cpal <- colorNumeric(palette = "rocket", domain = card_fl_all$difference, na.color = NA, reverse = TRUE)
+cpal <- colorNumeric(palette = "rocket", domain = card_fl_all$difference, na.color = NA)
 
-rpal <- colorNumeric(palette = "mako", domain = rubythroat_all$mean, na.color = NA)
+rpal <- colorNumeric(palette = "mako", domain = rubythroat_all$difference, na.color = NA)
  
 ```
 
 
-### Trends in Cardinal Flower Blooms (2015-2025)
+### Trends in Cardinal Flower Blooms (2018 - 2025)
 ```{r}
 leaflet(card_fl_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
   addCircleMarkers(~longitude, ~ latitude, radius = 1, color = ~cpal(difference)) %>%
-  addLegend(pal = cpal, values = ~difference, title = "Difference From 2010-2014 Average (days)", position = "bottomleft")
+  addLegend(pal = cpal, values = ~difference, title = "Difference From 2010-2017 Average (days)", position = "bottomleft")
 ```
 
 
-### Trends in Ruby-Throated Hummingbird Sightings (2015 - 2025)
+### Trends in Ruby-Throated Hummingbird Sightings (2018 - 2025)
 ```{r}
 leaflet(rubythroat_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~Longitude, ~ Latitude, radius = 1, color = ~rpal(mean)) %>%
-  addLegend(pal = rpal, values = ~mean, title = "Average Day of Arrival (Year Day)", position = "bottomleft") 
+  addCircleMarkers(~Longitude, ~ Latitude, radius = 1, color = ~rpal(difference)) %>%
+  addLegend(pal = rpal, values = ~difference, title = "Difference From 2010-2017 Average (days)", position = "bottomleft") 
 ```
 
 
