@@ -10,7 +10,7 @@ editor_options:
 
 # Introduction
 
-With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Conversely, flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may not be changing the time of their first bloom. Therefore, when birds that rely on flowers as food sources migrate back earlier, they may not have enough food to support them when they arrive. I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of species it prefers to feed on, the Cardinal Flower (Lobelia cardinalis), the Trumpet Creeper (Campsis radicans), and Scarlet Beebalm (Monarda didyma) has changed (or not changed) over the past 8 years. I predict that Ruby-throated Hummingbirds are migrating back earlier each year, and they are arriving at increasing latitudes earlier than lower latitudes. Additionally, I suppose that the first sightings of these flowers in the months that Ruby-throated Hummingbirds migrate back North will be earlier compared to previous years, but not to the same extent as the bird migrations.
+With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Conversely, flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may not be changing the time of their first bloom. Therefore, when birds that rely on flowers as food sources migrate back earlier, they may not have enough food to support them when they arrive. I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 8 years. I predict that Ruby-throated Hummingbirds are migrating back earlier each year, and they are arriving at increasing latitudes earlier than lower latitudes. Additionally, I suppose that the first sightings of these flowers in the months that Ruby-throated Hummingbirds migrate back North will be earlier compared to previous years, but not to the same extent as the bird migrations.
 
 
 # Materials and methods
@@ -40,104 +40,88 @@ library(rnpn)
 
 ```
 
-2. I loaded my data from iNaturalist, renamed desired columns for easier use, and joined my data into one set.
+2. I loaded my data from iNaturalist and the US National Phenology Network and joined my data into one set.
 
 ```{r, message=FALSE, warning=FALSE}
-#cf2010 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2010, place_id = 1, query = "flower", maxresults = 5000)
-#ths2010 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2010, place_id = 1, maxresults = 5000)
-#sbb2010 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2010, place_id = 1, maxresults = 5000)
+#rb2010 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2010, place_id = 1, maxresults = 5000, quality = "research")
+#cb2010 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2010, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2010 <- rbind(cf2010, ths2010, sbb2010)
+#fl_2010 <- rbind(rb2010, cb2010)
 
-#cf2011 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2011, place_id = 1, query = "flower", maxresults = 5000)
-#ths2011 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2011, place_id = 1, maxresults = 5000)
-#sbb2011 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2011, place_id = 1, maxresults = 5000)
+#rb2011 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2011, place_id = 1, maxresults = 5000, quality = "research")
+#cb2011 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2011, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2011 <- rbind(cf2011, ths2011, sbb2011)
+#fl_2011 <- rbind(rb2011, cb2011)
 
-#cf2012 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2012, place_id = 1, query = "flower", maxresults = 5000)
-#ths2012 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2012, place_id = 1, maxresults = 5000)
-#sbb2012 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2012, place_id = 1, maxresults = 5000)
+#rb2012 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2012, place_id = 1, maxresults = 5000, quality = "research")
+#cb2012 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2012, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2012 <- rbind(cf2012, ths2012, sbb2012)
+#fl_2012 <- rbind(rb2012, cb2012)
 
-#cf2013 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2013, place_id = 1, query = "flower", maxresults = 5000)
-#ths2013 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2013, place_id = 1, maxresults = 5000)
-#sbb2013 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2013, place_id = 1, maxresults = 5000)
+#rb2013 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2013, place_id = 1, maxresults = 5000, quality = "research")
+#cb2013 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2013, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2013 <- rbind(cf2013, ths2013, sbb2013)
+#fl_2013 <- rbind(rb2013, cb2013)
 
-#cf2014 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2014, place_id = 1, query = "flower", maxresults = 5000)
-#ths2014 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2014, place_id = 1, maxresults = 5000)
-#sbb2014 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2014, place_id = 1, maxresults = 5000)
+#rb2014 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2014, place_id = 1, maxresults = 5000, quality = "research")
+#cb2014 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2014, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2014 <- rbind(cf2014, ths2014, sbb2014)
+#fl_2014 <- rbind(rb2014, cb2014)
 
-#cf2015 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2015, place_id = 1, query = "flower", maxresults = 5000)
-#ths2015 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2015, place_id = 1, maxresults = 5000)
-#sbb2015 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2015, place_id = 1, maxresults = 5000)
+#rb2015 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2015, place_id = 1, maxresults = 5000, quality = "research")
+#cb2015 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2015, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2015 <- rbind(cf2015, ths2015, sbb2015)
+#fl_2015 <- rbind(rb2015, cb2015)
 
-#cf2016 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2016, place_id = 1, query = "flower", maxresults = 5000)
-#ths2016<- get_inat_obs(taxon_name = "Campsis radicans", year = 2016, place_id = 1, maxresults = 5000)
-#sbb2016 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2016, place_id = 1, maxresults = 5000)
+#rb2016 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2016, place_id = 1, maxresults = 5000, quality = "research")
+#cb2016 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2016, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2016 <- rbind(cf2016, ths2016, sbb2016)
+#fl_2016 <- rbind(rb2016, cb2016)
 
-#cf2017 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2017, place_id = 1, query = "flower", maxresults = 5000)
-#ths2017 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2017, place_id = 1, maxresults = 5000)
-#sbb2017 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2017, place_id = 1, maxresults = 5000)
+#rb2017 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2017, place_id = 1, maxresults = 5000, quality = "research")
+#cb2017 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2017, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2017 <- rbind(cf2017, ths2017, sbb2017)
+#fl_2017 <- rbind(rb2017, cb2017)
 
-#cf2018 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2018, place_id = 1, query = "flower", maxresults = 5000)
-#ths2018 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2018, place_id = 1, maxresults = 5000)
-#sbb2018 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2018, place_id = 1, maxresults = 5000)
+#rb2018 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2018, place_id = 1, maxresults = 5000, quality = "research")
+#cb2018 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2018, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2018 <- rbind(cf2018, ths2018, sbb2018)
+#fl_2018 <- rbind(rb2018, cb2018)
 
-#cf2019 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2019, place_id = 1, query = "flower", maxresults = 5000)
-#ths2019 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2019, place_id = 1, maxresults = 5000)
-#sbb2019 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2019, place_id = 1, maxresults = 5000)
+#rb2019 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2019, place_id = 1, maxresults = 5000, quality = "research")
+#cb2019 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2019, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2019 <- rbind(cf2019, ths2012, sbb2019)
+#fl_2019 <- rbind(rb2019, cb2019)
 
-#cf2020 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2020, place_id = 1, query = "flower", maxresults = 5000)
-#ths2020 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2020, place_id = 1, maxresults = 5000)
-#sbb2020 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2020, place_id = 1, maxresults = 5000)
+#rb2020 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2020, place_id = 1, maxresults = 5000, quality = "research")
+#cb2020 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2020, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2020 <- rbind(cf2020, ths2012, sbb2020)
+#fl_2020 <- rbind(rb2020, cb2020)
 
-#cf2021 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2021, place_id = 1, query = "flower", maxresults = 5000)
-#ths2021 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2021, place_id = 1, maxresults = 5000)
-#sbb2021 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2021, place_id = 1, maxresults = 5000)
+#rb2021 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2021, place_id = 1, maxresults = 5000, quality = "research")
+#cb2021 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2021, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2021 <- rbind(cf2021, ths2021, sbb2021)
+#fl_2021 <- rbind(rb2021, cb2021)
 
-#cf2022 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2022, place_id = 1, query = "flower", maxresults = 5000)
-#ths2022 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2022, place_id = 1, maxresults = 5000)
-#sbb2022 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2022, place_id = 1, maxresults = 5000)
+#rb2022 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2022, place_id = 1, maxresults = 5000, quality = "research")
+#cb2022 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2022, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2022 <- rbind(cf2022, ths2022, sbb2022)
+#fl_2022 <- rbind(rb2022, cb2022)
 
-#cf2023 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2023, place_id = 1, query = "flower", maxresults = 5000)
-#ths2023 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2023, place_id = 1, maxresults = 5000)
-#sbb2023 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2023, place_id = 1, maxresults = 5000)
+#rb2023 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2023, place_id = 1, maxresults = 5000, quality = "research")
+#cb2023 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2023, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2023 <- rbind(cf2023, ths2023, sbb2023)
+#fl_2023 <- rbind(rb2023, cb2023)
 
-#cf2024 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2024, place_id = 1, query = "flower", maxresults = 5000)
-#ths2024 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2024, place_id = 1, maxresults = 5000)
-#sbb2024 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2024, place_id = 1, maxresults = 5000)
+#rb2024 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2024, place_id = 1, maxresults = 5000, quality = "research")
+#cb2024 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2024, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2024  <- rbind(cf2024, ths2024, sbb2024)
+#fl_2024 <- rbind(rb2024, cb2024)
 
-#cf2025 <- get_inat_obs(taxon_name = "Lobelia cardinalis", year = 2025, place_id = 1, query = "flower", maxresults = 5000)
-#ths2025 <- get_inat_obs(taxon_name = "Campsis radicans", year = 2025, place_id = 1, maxresults = 5000)
-#sbb2025 <- get_inat_obs(taxon_name = "Monarda didyma", year = 2025, place_id = 1, maxresults = 5000)
+#rb2025 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2025, place_id = 1, maxresults = 5000, quality = "research")
+#cb2025 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2025, place_id = 1, maxresults = 5000, quality = "research")
 
-#fl_2025 <- rbind(cf2025, ths2025, sbb2025)
+#fl_2025 <- rbind(rb2025, cb2025)
 
 #fl_all <- rbind(fl_2010, fl_2011, fl_2012, fl_2013, fl_2014, fl_2015, fl_2016, fl_2017, fl_2018, fl_2019, fl_2020, fl_2021, fl_2022, fl_2023, fl_2024, fl_2025)
 
@@ -145,14 +129,16 @@ library(rnpn)
 
 nat_flower <- read.csv("data/fl_all.csv")
 nat_flower <- nat_flower %>%
-  filter(quality_grade == "research" & captive_cultivated == "false")
+  filter(captive_cultivated == "false")
+
+#Species IDs from USNPN
 
 #npn_download_individual_phenometrics(
-   # request_source='Aubrey Monaco', 
-  # years=c(2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024, 2025), 
-  # species_id=c(916, 1186, 309), 
-  # download_path="npn_flower.csv"
-#)
+ #  request_source='Aubrey Monaco', 
+ # years=c(2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024, 2025), 
+#  species_id=c(784, 149), 
+#  download_path="npn_flower.csv"
+# )
 
 npn_flower <- read.csv("npn_flower.csv")
 
@@ -166,91 +152,82 @@ all_flower <- all_flower %>%
   mutate(observed_on = parse_date_time(observed_on, orders = c("mdy", "ydm", "dmy"))) %>%
   mutate(year = year(observed_on)) %>%
   mutate(year_day = yday(observed_on)) %>%
-  mutate(month = month(observed_on)) %>%
-  mutate(last_yes_year = NULL,
-         last_yes_month = NULL,
-         last_yes_doy = NULL,
-         last_yes_day = NULL,
-         last_yes_day = NULL, 
-         phenophase_id = NULL,
-         phenophase_description = NULL,
-         kingdom = NULL,
-         genus = NULL,
-         elevation_in_meters = NULL,
-         state = NULL,
-         user_login = NULL,
-         user_id = NULL,
-         user_name = NULL,
-         numdays_since_prior_no = NULL,
-         numdays_until_next_no = NULL,
-         positional_accuracy = NULL,
-         geoprivacy = NULL,
-         public_positional_accuracy = NULL,
-         positioning_method = NULL,
-         positioning_device = NULL,
-         updated_at = NULL)
+  mutate(month = month(observed_on))
+ 
 ```
 
-4. I found the mean date of first sightings of the selected flowers from 2010 to 2017 and from June to September (when ruby-throats are most abundant) to compare data from the last 8 years to. The mean date of flower sightings was March 10th (the 69th day of the year).
+4. I found the mean date of first sightings of the selected flowers from 2010 to 2017 and from June to September (when ruby-throats are most abundant) to compare data from the last 8 years to. 
+
 ```{r, message=FALSE, warning=FALSE}
 fl_early <- all_flower %>%
-  filter(year %in% c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & month %in% c(7, 8, 9))
+  filter(year %in% c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & month %in% c(2, 3, 4, 5, 6))
 
-fl_early_24 <- fl_early %>%
-  filter(latitude > 24 & latitude < 33) %>%
-  mutate(mean24 = mean(year_day, na.rm = TRUE)) 
+fl_early_27 <- fl_early %>%
+  filter(latitude > 27 & latitude < 33) %>%
+  mutate(mean27 = mean(year_day, na.rm = TRUE)) 
 
 fl_early_33 <- fl_early %>%
-  filter(latitude > 33 & latitude < 39) %>%
-  mutate(mean30 = mean(year_day, na.rm = TRUE))
+  filter(latitude > 33 & latitude < 36) %>%
+  mutate(mean33 = mean(year_day, na.rm = TRUE))
+
+fl_early_36 <- fl_early %>%
+  filter(latitude > 36 & latitude < 39) %>%
+  mutate(mean36 = mean(year_day, na.rm = TRUE))
 
 fl_early_39 <- fl_early %>%
-  filter(latitude > 39 & latitude <= 50) %>%
-  mutate(mean42 = mean(year_day, na.rm = TRUE)) 
+  filter(latitude > 39 & latitude <= 42) %>%
+  mutate(mean39 = mean(year_day, na.rm = TRUE)) 
 
-flearly1 <- fl_early_24 %>% full_join(fl_early_33)
-flearly <- fl_early_39 %>% full_join(flearly1)
+fl_early_42 <- fl_early %>%
+  filter(latitude > 42 & latitude < 59) %>%
+  mutate(mean42 = mean(year_day, na.rm = TRUE))
+
+flearly1 <- fl_early_27 %>% full_join(fl_early_33)
+flearly2 <- fl_early_36 %>% full_join(fl_early_39)
+flearly3 <- flearly1 %>% full_join(fl_early_42)
+
+flearly <- flearly2 %>% full_join(flearly3)
 
 flower_early_all <- all_flower %>% full_join(flearly)
 ```
 
 
-5. I created the dataset to see trends between 2018 and 2025, and in months Janurary to May. I separated sightings into 5 bands of latitude (in increments of approxiamtely 3, excepting 27 to 33, since there were so few observations). I rejoined all of these bands into one dataset to plot on a map. I also created a difference column, showing the difference in days of arrival between the new dataset and the 2010 to 2014 average using mean - mean1014.
+5. I created the dataset to see trends between 2018 and 2025, and in months Janurary to May. I separated sightings into 5 bands of latitude (in increments of approxiamtely 3, excepting 27 to 33, since there were so few observations). I rejoined all of these bands into one dataset to plot on a map. I also created a difference column, showing the difference in days of arrival between the new dataset and the 2010 to 2017 average using mean - mean1017.
+
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- flower_early_all %>%
-  filter(year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(7, 8, 9)) %>%
-  mutate(mean1014 = case_when(latitude >= 24 & latitude < 30 ~ 214.4615
+  filter(year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(2, 3, 4, 5, 6)) %>%
+  mutate(mean1017 = case_when(latitude >= 27 & latitude < 33 ~ 81.54737
 ,
-                          latitude > 30 & latitude < 33 ~ 214.4615,
-                          latitude > 33 & latitude < 36 ~ 221.44,
-                          latitude > 36 & latitude < 39 ~ 221.44,
-                          latitude > 39 & latitude < 42 ~ 223.3014,
-                          latitude > 42 & latitude < 49 ~ 223.3014))
+                          latitude > 33 & latitude < 36 ~ 85.73214,
+                          latitude > 36 & latitude < 39 ~ 88.62222,
+                          latitude > 39 & latitude < 42 ~ 92.59701,
+                          latitude > 42 & latitude < 59 ~ 94.25773))
 
 fl_27 <- flower_new %>%
-  filter(latitude >= 25 & latitude < 33) %>%
+  filter(latitude > 27 & latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1014)
+  mutate(difference = mean - mean1017)
 
 fl_33 <- flower_new %>%
   filter(latitude > 33 & latitude < 36) %>%
   mutate(av = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = av - mean1014)
+  mutate(difference = av - mean1017)
 
 fl_36 <- flower_new %>%
   filter(latitude > 36 & latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1014)
+  mutate(difference = mean - mean1017)
 
 fl_39 <- flower_new %>%
-  filter(latitude > 39 & latitude <= 42) %>%
+  filter(latitude > 39 & latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1014)
+  mutate(difference = mean - mean1017)
 
 fl_42 <- flower_new %>%
-  filter(latitude > 42 & latitude <= 46.64694) %>%
+  filter(latitude > 42 & latitude < 50) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1014)
+  mutate(difference = mean - mean1017)
 
 fl_1 <- fl_27 %>% full_join(fl_33)
 fl_2 <- fl_36 %>% full_join(fl_39)
@@ -263,7 +240,7 @@ fl_all <- fl_3 %>%
 
 ```
 
-6. I followed the same steps to find data for ruby-throated hummingbird migration and found their average arrival dates for various latitudes between 2010 and 2017.
+6. I followed the same steps to find data for ruby-throated hummingbird migration and found their average arrival dates for various latitudes between 2010 and 2017. I used data from eBird in addition to iNaturalist and the US National Phenology Network.
 
 My eBird datasets can be found on figshare here:
 - 1995-2021: https://figshare.com/articles/dataset/eBird_rthhum_2010_2014/30535889?file=59303393
@@ -339,71 +316,50 @@ ruby_throat <- rth_all %>%
 rth_early <- ruby_throat %>%
   filter(Year %in% c(2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & Month %in% c(2, 3, 4, 5))
 
-rthearly24 <- rth_early %>%
-  filter(Latitude >= 24.62760 & Latitude < 27) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
-
-rthearly27 <- rth_early %>%
-  filter(Latitude >= 27 & Latitude < 30) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
-  
 rthearly30 <- rth_early %>%
   filter(Latitude > 30 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly33 <- rth_early %>%
-  filter(Latitude >= 33 & Latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))  
+  filter(Latitude > 33 & Latitude < 36) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly36 <- rth_early %>%
   filter(Latitude > 36 & Latitude < 39) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
+  mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly39 <- rth_early %>%
-  filter(Latitude >= 39 & Latitude < 42) %>%
+  filter(Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
   
 rthearly42 <- rth_early %>%
-  filter(Latitude > 42 & Latitude < 45.28700) %>%
+  filter(Latitude > 42 & Latitude < 46) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
   
 
-rthearly1 <- rthearly24 %>% full_join(rthearly27)
-rthearly2 <- rthearly30 %>% full_join(rthearly33)
-rthearly3 <- rthearly36 %>% full_join(rthearly39)
-rthearly4 <- rthearly3 %>% full_join(rthearly42)
+rthearly1 <- rthearly30 %>% full_join(rthearly33)
+rthearly2 <- rthearly36 %>% full_join(rthearly39)
+rthearly3 <- rthearly42 %>% full_join(rthearly2)
 
-rthearly5 <- rthearly1 %>% full_join(rthearly2)
-
-rthearly <- rthearly4 %>% full_join(rthearly4)
+rthearly <- rthearly1 %>% full_join(rthearly3)
 
 ruby_throat_all <- ruby_throat %>% full_join(rth_early)
 
 ```
 
-7. I then similarly created the runy-throat dataset for 2015-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2010 to 2014 average using mean - mean1014.
+7. I then similarly created the runy-throat dataset for 2018-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2010 to 2017 average using mean - mean1017.
+
 ```{r, message=FALSE, warning=FALSE}
 
 rth_all <- ruby_throat_all %>%
   filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
-  mutate(mean1017 = case_when(Latitude >= 24.54630 & Latitude < 27 ~ 110.2414,
-                              Latitude > 27 & Latitude < 30 ~ 112.7043,
+  mutate(mean1017 = case_when(
                               Latitude > 30 & Latitude < 33 ~ 99.69231,
                               Latitude > 33 & Latitude < 36 ~ 104.48,
                               Latitude > 36 & Latitude < 39 ~ 125.4231,
-                              Latitude > 39 & Latitude < 42 ~ 132.783,
-                              Latitude > 42 & Latitude <= 48.08812 ~ 136.4409
+                              Latitude > 39 & Latitude < 42 ~ 133.2071,
+                              Latitude > 42 & Latitude < 49 ~ 138.1325
                               ))
-
-rth_24 <- rth_all %>%
-  filter(Latitude >= 24.54630 & Latitude < 27) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1017)
-
-rth_27 <- rth_all %>%
-  filter(Latitude > 27 & Latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean1017)
 
 rth_30 <- rth_all %>%
   filter(Latitude > 30 & Latitude < 36) %>%
@@ -430,19 +386,16 @@ rth_42 <- rth_all %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean1017)
 
+rth_1 <- rth_30 %>% full_join(rth_33)
+rth_2 <- rth_36 %>% full_join(rth_39)
+rth_3 <- rth_2 %>% full_join(rth_42)
 
-rth_1 <- rth_24 %>% full_join(rth_27)
-rth_2 <- rth_30 %>% full_join(rth_33)
-rth_3 <- rth_36 %>% full_join(rth_39)
-rth_4 <- rth_3 %>% full_join(rth_42)
+rubythroat_all <- rth_1 %>% full_join(rth_3)
 
-rth_5 <- rth_1 %>% full_join(rth_2)
-
-
-rubythroat_all <- rth_4 %>% full_join(rth_5)
 ```
 
 8. I then created color palettes using viridis scales and colorNumeric from the Leaflet package for my two maps, specifying to use the difference column in each dataset to map the colors to.
+
 ```{r}
 
 cpal <- colorNumeric(palette = "mako", domain = fl_all$difference, na.color = NA)
