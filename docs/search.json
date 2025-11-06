@@ -2,14 +2,14 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Phenological Shifts in the Ruby-Throated Hummingbird and Preferred Flowers",
+    "title": "Phenological Shifts in the Ruby-Throated Hummingbird and its Preferred Flowers",
     "section": "",
-    "text": "With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Conversely, flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may not be changing the time of their first bloom. Therefore, when birds that rely on flowers as food sources migrate back earlier, they may not have enough food to support them when they arrive. I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 8 years. I predict that Ruby-throated Hummingbirds are migrating back earlier each year, and they are arriving at increasing latitudes earlier than lower latitudes. Additionally, I suppose that the first sightings of these flowers in the months that Ruby-throated Hummingbirds migrate back North will be earlier compared to previous years, but not to the same extent as the bird migrations."
+    "text": "With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may be changing the time of their first bloom. I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 10 years. I predict that Ruby-throated Hummingbirds are migrating back earlier each year, and they are arriving at higher latitudes increasingly earlier than lower latitudes. Additionally, I suppose that the first sightings of these flowers in the months that Ruby-throated Hummingbirds migrate back North will be earlier compared to previous years."
   },
   {
     "objectID": "index.html#download-and-clean-all-required-data",
     "href": "index.html#download-and-clean-all-required-data",
-    "title": "Phenological Shifts in the Ruby-Throated Hummingbird and Preferred Flowers",
+    "title": "Phenological Shifts in the Ruby-Throated Hummingbird and its Preferred Flowers",
     "section": "Download and clean all required data",
     "text": "Download and clean all required data\nTo download Ruby-throated Hummingbird data from eBird on your own, visit: https://media.ebird.org/catalog?birdOnly=true&taxonCode=rthhum, filter by year (I did this in two separate actions [1995-2021 and 2022-2025] to ensure I could download all of the data), and filter by location (United States)"
   },
