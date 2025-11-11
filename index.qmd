@@ -21,11 +21,13 @@ With warming temperatures due to anthropogenic climate change, bird migration ti
 #install.packages("leaflet")
 #install.packages("rinat")
 #install.packages("rnpn")
+#install.packages("profvis")
 library(leaflet)
 library(dplyr)
 library(lubridate)
 library(rinat)
 library(rnpn)
+library(profvis)
 
 ```
 
@@ -206,6 +208,7 @@ all_flower <- all_flower %>%
 7. I found the mean date of first sightings of the selected flowers from 2000 to 2014 and from March to June (when these flowers bloom and ruby-throats migrate north) to compare data from the last 10 years to by creating bands of latitude. 
 
 ```{r, message=FALSE, warning=FALSE}
+
 fl_early <- all_flower %>%
   filter(year %in% c(2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & month %in% c(3, 4, 5, 6))
 
@@ -236,6 +239,7 @@ flearly3 <- flearly1 %>% full_join(fl_early_45)
 flearly <- flearly2 %>% full_join(flearly3)
 
 flower_early_all <- all_flower %>% full_join(flearly)
+
 ```
 
 8. I created the dataset to see trends between 2015 and 2025, and in months Janurary to May. I separated sightings into 5 bands of latitude (in increments of approxiamtely 3, excepting 27 to 33 and 36 to 42, since there were so few observations). I rejoined all of these bands into one dataset to plot on a map. I also created a difference column, showing the difference in days of arrival between the new dataset and the 2000 to 2014 average using mean - mean0014.
@@ -498,7 +502,7 @@ Show tables, plots, etc. and describe them.r
 leaflet(fl_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~longitude, ~ latitude, radius = 1, color = ~cpal(difference)) %>%
+  addCircleMarkers(~longitude, ~ latitude, radius = 3, color = ~cpal(difference)) %>%
   addLegend(pal = cpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft")
 ```
 
@@ -508,7 +512,7 @@ leaflet(fl_all) %>%
 leaflet(rubythroat_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~Longitude, ~ Latitude, radius = 1, color = ~rpal(difference)) %>%
+  addCircleMarkers(~Longitude, ~ Latitude, radius = 3, color = ~rpal(difference)) %>%
   addLegend(pal = rpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") 
 ```
 
