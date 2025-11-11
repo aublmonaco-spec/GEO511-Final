@@ -4,6 +4,7 @@ author: Aubrey Monaco
 subtitle: GEO511 Final Project
 date: today
 date-format: long
+site: _site.yml
 editor_options:
   chunk_output_type: console
 ---

@@ -3,7 +3,7 @@ project:
   output-dir: docs
   
 website:
-  title: "Pollination Pals: The Ruby-Throated Hummingbird and Cardinal Flower"
+  title: "Pollination Pals: The Ruby-Throated Hummingbird and Preferred Flowers"
   navbar:
     left:
       - href: index.qmd
