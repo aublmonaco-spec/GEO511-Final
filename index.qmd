@@ -14,9 +14,10 @@ With warming temperatures due to anthropogenic climate change, bird migration ti
 
 # Materials and methods
 
-1.  I installed leaflet, for making maps, along with rinat and rnpn to download data from iNaturalist and the US National Phenology Network, respectively. I then loaded my necessary libraries. I used dplyr to mutate and filter data, lubridate to parse date data, and profvis to check code efficiency.
+1.  I installed leaflet, for making maps, along with rinat and rnpn to download data from iNaturalist and the US National Phenology Network, respectively. I then loaded my necessary libraries. I used dplyr to mutate and filter data, lubridate to parse date data, ggplot2 for plotting, and profvis to check code efficiency.
 
 ```{r, message=FALSE, warning=FALSE}
+
 #install.packages("leaflet")
 #install.packages("rinat")
 #install.packages("rnpn")
@@ -24,6 +25,7 @@ With warming temperatures due to anthropogenic climate change, bird migration ti
 library(leaflet)
 library(dplyr)
 library(lubridate)
+library(ggplot2)
 library(rinat)
 library(rnpn)
 library(profvis)
@@ -34,7 +36,7 @@ library(profvis)
 
   - I repeated the below process of downloading iNaturalist observational data using the rinat package for each year from 2001 to 2025 (no data was available from 2000), saving each to an object, and combining species data to have a dataset for each year. The functions are commented out after running them once so that they do not start each time the code is run.
   
-  - rb  = Red Buckeye
+  - rb = Red Buckeye
   
   - cb = Columbine
   
@@ -42,34 +44,13 @@ library(profvis)
 
 ```{r, message=FALSE, warning=FALSE}
 
-#rb2001 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2001, place_id = 1, maxresults = 5000, quality = "research")
-#cb2001 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2001, place_id = 1, maxresults = 5000, quality = "research")
-
-#rbind combines rows of both datasets
-
-#fl_2001 <- rbind(rb2001, cb2001)
-```
-
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
-#rb2002 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2002, place_id = 1, maxresults = 5000, quality = "research")
-#cb2002 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2002, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2002 <- rbind(rb2002, cb2002)
-
-#rb2003 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2003, place_id = 1, maxresults = 5000, quality = "research")
-#cb2003 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2003, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2003 <- rbind(rb2003, cb2003)
-
-#rb2004 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2004, place_id = 1, maxresults = 5000, quality = "research")
-#cb2004 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2004, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2004 <- rbind(rb2004, cb2004)
-
 #rb2005 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2005, place_id = 1, maxresults = 5000, quality = "research")
 #cb2005 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2005, place_id = 1, maxresults = 5000, quality = "research")
 
 #fl_2005 <- rbind(rb2005, cb2005)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 
 #rb2006 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
 #cb2006 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
@@ -170,18 +151,21 @@ library(profvis)
 #cb2025 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2025, place_id = 1, maxresults = 5000, quality = "research")
 
 #fl_2025 <- rbind(rb2025, cb2025)
+
 ```
 
 3. I combined the datasets from each year into one whole set. I then converted this data into a csv, and loaded it into my environment as nat_flower to deisgnate data from iNaturalist. I filtered nat_flower to only include wild sightings of the selected species (captive_cultivated = "false").
 
 ```{r, message=FALSE, warning=FALSE}
-#fl_all <- rbind(fl_2001, fl_2002, fl_2003, fl_2004, fl_2005, fl_2006, fl_2007, fl_2008, fl_2009, fl_2010, fl_2011, fl_2012, fl_2013, fl_2014, fl_2015, fl_2016, fl_2017, fl_2018, fl_2019, fl_2020, fl_2021, fl_2022, fl_2023, fl_2024, fl_2025)
+
+#fl_all <- rbind(fl_2005, fl_2006, fl_2007, fl_2008, fl_2009, fl_2010, fl_2011, fl_2012, fl_2013, fl_2014, fl_2015, fl_2016, fl_2017, fl_2018, fl_2019, fl_2020, fl_2021, fl_2022, fl_2023, fl_2024, fl_2025)
 
 #write.csv(fl_all, "data/fl_all.csv")
 
 nat_flower <- read.csv("data/fl_all.csv")
 nat_flower <- nat_flower %>%
   filter(captive_cultivated == "false")
+
 ```
 
 4. I then used the rnpn package to download data for the plant species from the National Phenology Network (which automatically saves as a csv). The species IDs were available through the NPN's website (Red Buckeye = 784, columbine = 147).
@@ -190,7 +174,7 @@ nat_flower <- nat_flower %>%
 
 #npn_download_individual_phenometrics(
 # request_source='Aubrey Monaco', 
-# years=c(2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024, 2025), 
+# years=c(2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024, 2025), 
 # species_id=c(784, 147), 
 # download_path="npn_flower.csv"
 # )
@@ -224,15 +208,15 @@ all_flower <- all_flower %>%
 ```{r, message=FALSE, warning=FALSE}
 
 fl_early <- all_flower %>%
-  filter(year %in% c(2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & month %in% c(3, 4, 5, 6))
+  filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & month %in% c(3, 4, 5, 6))
 
 fl_early_30 <- fl_early %>%
-  filter(latitude > 29 & latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
+  filter(latitude > 30 & latitude < 36) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early_36 <- fl_early %>%
   filter(latitude > 36 & latitude < 42) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
+  mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early_42 <- fl_early %>%
   filter(latitude > 42 & latitude < 45) %>%
@@ -242,6 +226,11 @@ fl_early_45 <- fl_early %>%
   filter(latitude > 45 & latitude < 48) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
+fl_early1 <- fl_early_30 %>% full_join(fl_early_36)
+fl_early2 <- fl_early_42 %>% full_join(fl_early_45)
+
+fl_early_all <- fl_early1 %>% full_join(fl_early2)
+
 #Checked each dataset for the mean bloom date
 
 ```
@@ -250,13 +239,13 @@ fl_early_45 <- fl_early %>%
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
-  filter(year %in% c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5, 6)) %>%
+  filter(year %in% c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(2, 3, 4, 5, 6, 7)) %>%
   mutate(mean0014 = case_when(
-                          latitude > 30 & latitude < 33 ~ 96.76471,
-                          latitude > 33 & latitude < 36 ~ 96.76471,
+                          latitude > 30 & latitude < 33 ~ 95.725,
+                          latitude > 33 & latitude < 36 ~ 95.725,
                           latitude > 36 & latitude < 39 ~ 98.94444,
                           latitude > 39 & latitude < 42 ~ 98.94444,
-                          latitude > 42 & latitude < 45 ~ 120.5556,
+                          latitude > 42 & latitude < 45 ~ 121.32,
                           latitude > 45 & latitude < 48 ~ 131))
 
 fl_30 <- flower_new %>%
@@ -280,13 +269,18 @@ fl_39 <- flower_new %>%
   mutate(difference = mean - mean0014)
 
 fl_42 <- flower_new %>%
-  filter(latitude > 42 & latitude < 50) %>%
+  filter(latitude > 42 & latitude < 45) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
+  mutate(difference = mean - mean0014)
+
+fl_45 <- flower_new %>%
+  filter(latitude > 45 & latitude < 50) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0014)
 
 fl_1 <- fl_30 %>% full_join(fl_33)
 fl_2 <- fl_36 %>% full_join(fl_39)
-fl_3 <- fl_42 %>% full_join(fl_2)
+fl_3 <- fl_42 %>% full_join(fl_45)
 
 fl_4 <- fl_1 %>% full_join(fl_2)
 
@@ -307,21 +301,11 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 
 ```{r, message=FALSE, warning=FALSE}
 
-#rth2000 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2000, place_id = 1, maxresults = 5000)
+#rth2005 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2005, place_id = 1, maxresults = 5000)
 
 ```
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
-
-#rth2001 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2001, place_id = 1, maxresults = 5000)
-
-#rth2002 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2002, place_id = 1, maxresults = 5000)
-
-#rth2003 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2003, place_id = 1, maxresults = 5000)
-
-#rth2004 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2004, place_id = 1, maxresults = 5000)
-
-#rth2005 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2005, place_id = 1, maxresults = 5000)
 
 #rth2006 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2006, place_id = 1, maxresults = 5000)
 
@@ -362,23 +346,24 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 #rth2024 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2024, place_id = 1, maxresults = 10000)
 
 #rth2025 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2025, place_id = 1, maxresults = 10000)
+
 ```
 
 ```{r, warning=FALSE, message=FALSE}
 
 #Combined all iNat data into one data set for Ruby-Throats
 
-#rth_nat <- rbind(rth2000, rth2001, rth2002, rth2002, rth2003, rth2004, rth2005, rth2005, rth2006, rth2007, rth2008, rth2009, rth2010, rth2011, rth2012, rth2013, rth2014, rth2015, rth2016, rth2017, rth2018, rth2019, rth2020, rth2021, rth2022, rth2023, rth2024, rth2025)
+#rth_nat <- rbind(rth2005, rth2006, rth2007, rth2008, rth2009, rth2010, rth2011, rth2012, rth2013, rth2014, rth2015, rth2016, rth2017, rth2018, rth2019, rth2020, rth2021, rth2022, rth2023, rth2024, rth2025)
 
 #write.csv(rth_nat, "data/rth_nat.csv")
 
 #NPN data download (Ruby-Throated Hummingbird = 352 (Species ID))
 
 #npn_download_individual_phenometrics(
- #request_source='Aubrey Monaco', 
- #years=c(2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023, 2024, 2025), 
- #species_id=c(352), 
- #download_path="data/npn_rth.csv")
+# request_source='Aubrey Monaco', 
+# years=c(2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023, 2024, 2025), 
+# species_id=c(352), 
+# download_path="data/npn_rth.csv")
 
 #Renamed latitude column for easier manipulation
 npn_rth <- read.csv("data/npn_rth.csv")
@@ -404,13 +389,14 @@ rth_all <- rth_some %>% full_join(npn_rth)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
+
 ruby_throat <- rth_all %>%
   mutate(date_new = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
   mutate(year_new = year(date_new)) %>%
   mutate(year_day = yday(date_new))
 
 rth_early <- ruby_throat %>%
-  filter(Year %in% c(2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & Month %in% c(3, 4, 5, 6))
+  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014) & Month %in% c(3, 4, 5, 6))
 
 rthearly30 <- rth_early %>%
   filter(Latitude > 30 & Latitude < 33) %>%
@@ -480,9 +466,9 @@ rubythroat_all <- rth_2 %>% full_join(rth_3)
 
 ```{r}
 
-cpal <- colorNumeric(palette = "mako", domain = fl_new_all$difference, na.color = NA)
+cpal <- colorNumeric(palette = "viridis", domain = fl_new_all$difference, na.color = NA)
 
-rpal <- colorNumeric(palette = "mako", domain = rubythroat_all$difference, na.color = NA)
+rpal <- colorNumeric(palette = "viridis", domain = rubythroat_all$difference, na.color = NA)
  
 ```
 
@@ -494,32 +480,89 @@ To download the Ruby-throated Hummingbird data from eBird on your own, visit: <h
 
 ### Trends in Flower Blooms (2015 - 2025)
 ```{r}
+
 leaflet(fl_new_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
   addCircleMarkers(~longitude, ~ latitude, radius = 3, color = ~cpal(difference)) %>%
   addLegend(pal = cpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft")
+
 ```
+
+Dates for each latitude band:
+
+- 30-33: April 21st (About 15 days later)
+
+- 33-36: April 19th (About 13 days later)
+
+- 36-39: April 20th (About 10 days later)
+
+- 39-42: April 20th (About 11 days later)
+
+- 42-45: April 20th (About 12 days earlier)
+
+- 45-50: April 21st (About 20 days earlier)
 
 ### Trends in Ruby-Throated Hummingbird Sightings (2015 - 2025)
 ```{r}
+
 leaflet(rubythroat_all) %>%
   addProviderTiles(provider = "Esri") %>%
   addSimpleGraticule(interval = 3) %>%
   addCircleMarkers(~Longitude, ~ Latitude, radius = 3, color = ~rpal(difference)) %>%
   addLegend(pal = rpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") 
+
+```
+
+Dates for each latitude band:
+
+- 30-33: April 23rd (About 3 days later)
+
+- 33-36: May 3rd (About 1 day later)
+
+- 36-39: May 20th (About 1 day earlier)
+
+- 39-42: May 24th (About 4 days earlier)
+
+- 42-45: May 27th (About 1 day earlier)
+
+### Average Bloom Time of Columbine and Red Buckeye (2015-2025)
+```{r}
+
+ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "red") + labs(title = "Average Bloom Time of Columbine and Red Buckeye", x = "Mean Bloom Date (Year Days)", y = "Latitude")
+
+```
+
+
+### Average First Sighting Date of Ruby-throated Hummingbirds (2015-2025)
+
+```{r}
+
+ggplot() + geom_point(data = rubythroat_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rubythroat_all, aes(x = mean, y = Latitude), method = "lm", color = "blue") + labs(title = "Average First Sighting Date of Ruby-throated Hummingbirds", x = "Mean Sighting Date (Year Days)", y = "Latitude")
+
 ```
 
 
 # Conclusions
 
-Trends for the preferred flowers have shown that its timing of first observations have changed from the 2000-2014 average.At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted earlier than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend.
+Trends for the preferred flowers have shown that its timing of first observations have changed from the 2000-2014 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling.
 
 Similarly, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. But similarly to the flower trends, the observations at lower latitudes are happening later on average. This may be due to the experience of more mild winters.
 
+These trends do somewhat align. All flower bloom times occur around or before the average date of Ruby-throat sighting. Ruby-throats thus may move back earlier, especially to higher latitudes, since their food is available.
+
+It is important to note, though, that this dataset is relatively small and data used to acquire average arrival/bloom dates for 2005 to 2014 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. For Ruby-throats, the data was more plentiful for higher latitudes.
 
 # References
 
-All sources are cited in a consistent manner
+-Coffey, M. L., & Simons, A. M. (2025). The spatial distribution of a hummingbird‐pollinated plant is not strongly influenced by hummingbird abundance. American Journal of Botany, 112(5), e70034. <https://doi.org/10.1002/ajb2.70034>
+
+-Correa-Lima, A. P. A., Varassin, I. G., Barve, N., & Zwiener, V. P. (2019). Spatio-temporal effects of climate change on the geographical distribution and flowering phenology of hummingbird-pollinated plants. Annals of Botany, 124(3), 389–398. <https://doi.org/10.1093/aob/mcz079>
+
+-Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds ( Archilochus colubris ) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
+
+-Delayed flowering phenology of red-flowering plants in response to hummingbird migration: Current Biology. (n.d.). Retrieved November 12, 2025, from <https://www.cell.com/current-biology/fulltext/S0960-9822(25)00347-1?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS0960982225003471%3Fshowall%3Dtrue>
+
+-Ruby-throated Hummingbird. (n.d.). Retrieved November 12, 2025, from <https://www.fs.usda.gov/wildflowers/pollinators/pollinator-of-the-month/ruby-throated_hummingbird.shtml>
 
 Thanks for checking out my web site!
