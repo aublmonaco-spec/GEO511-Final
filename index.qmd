@@ -241,7 +241,7 @@ fl_early_all <- fl_early1 %>% full_join(fl_early2)
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
-  filter(year %in% c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(2, 3, 4, 5, 6, 7)) %>%
+  filter(year %in% c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5, 6)) %>%
   mutate(mean0014 = case_when(
                           latitude > 30 & latitude < 33 ~ 95.725,
                           latitude > 33 & latitude < 36 ~ 95.725,
@@ -291,7 +291,7 @@ fl_new_all <- fl_3 %>%
 
 ```
 
-9. I followed the same steps to find data for Ruby-Throated Hummingbird migration and found their average arrival dates for various latitudes between 2000 and 2014. I used data from eBird in addition to iNaturalist and the US National Phenology Network.
+9. I followed the same steps to find data for Ruby-throated Hummingbird migration and found their average arrival dates for various latitudes between 2000 and 2014. I used data from eBird in addition to iNaturalist and the US National Phenology Network.
 
 My eBird datasets can be found on figshare here:
 
