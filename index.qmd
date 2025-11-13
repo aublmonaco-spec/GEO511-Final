@@ -19,10 +19,12 @@ With warming temperatures due to anthropogenic climate change, bird migration ti
 ```{r, message=FALSE, warning=FALSE}
 
 #install.packages("leaflet")
+#install.packages("leaflet.extras")
 #install.packages("rinat")
 #install.packages("rnpn")
 #install.packages("profvis")
 library(leaflet)
+library(leaflet.extras)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
@@ -535,13 +537,21 @@ ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smo
 
 
 ### Average First Sighting Date of Ruby-throated Hummingbirds (2015-2025)
-
 ```{r}
 
 ggplot() + geom_point(data = rubythroat_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rubythroat_all, aes(x = mean, y = Latitude), method = "lm", color = "blue") + labs(title = "Average First Sighting Date of Ruby-throated Hummingbirds", x = "Mean Sighting Date (Year Days)", y = "Latitude")
 
 ```
 
+### Observation Heatmap
+```{r}
+
+leaflet(all_flower)%>%
+  addProviderTiles(provider = "Esri") %>%
+  setView(-85.7664, 38.2469, zoom = 4) %>%
+  addHeatmap()
+
+```
 
 # Conclusions
 
@@ -551,7 +561,7 @@ Similarly, the average first observation date for Ruby-throated hummingbirds has
 
 These trends do somewhat align. All flower bloom times occur around or before the average date of Ruby-throat sighting. Ruby-throats thus may move back earlier, especially to higher latitudes, since their food is available.
 
-It is important to note, though, that this dataset is relatively small and data used to acquire average arrival/bloom dates for 2005 to 2014 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. For Ruby-throats, the data was more plentiful for higher latitudes.
+It is important to note, though, that this dataset is relatively small and data used to acquire average arrival/bloom dates for 2005 to 2014 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. As shown in the heatmap, observations do tend to be concentrated in urban areas. For Ruby-throats, the data was more plentiful for higher latitudes.
 
 # References
 
