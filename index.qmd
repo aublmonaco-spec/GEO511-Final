@@ -544,7 +544,7 @@ Dates for each latitude band:
 
 ```{r}
 
-ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "red") + labs(title = "Average Bloom Time of Columbine and Red Buckeye", x = "Mean Bloom Date (Year Days)", y = "Latitude")
+ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + labs(title = "Average Bloom Time of Columbine and Red Buckeye", x = "Mean Bloom Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
 
 ```
 
@@ -552,7 +552,7 @@ ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smo
 
 ```{r}
 
-ggplot() + geom_point(data = rubythroat_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rubythroat_all, aes(x = mean, y = Latitude), method = "lm", color = "blue") + labs(title = "Average First Sighting Date of Ruby-throated Hummingbirds", x = "Mean Sighting Date (Year Days)", y = "Latitude")
+ggplot() + geom_point(data = rubythroat_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rubythroat_all, aes(x = mean, y = Latitude), method = "lm", color = "darkblue") + labs(title = "Average First Sighting Date of Ruby-throated Hummingbirds", x = "Mean Sighting Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "pink"))
 
 ```
 
