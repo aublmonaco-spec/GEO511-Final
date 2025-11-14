@@ -30,7 +30,8 @@ library(lubridate)
 library(ggplot2)
 library(rinat)
 library(rnpn)
-library(profvis)
+library(doParallel)
+library(foreach)
 
 ```
 
@@ -53,6 +54,15 @@ library(profvis)
 ```
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
+
+#num_cores <- parallel::detectCores() - 1
+#registerDoParallel(num_cores)
+
+#fl_years <- levels(as.factor(2005:2025))
+#rb <- "Aesculus pavia"
+
+#nat_flower <- foreach(y = unique(fl_years), n = rb, .packages = c("rinat", "dplyr"), .combine = rbind) %dopar% { get_inat_obs(year = y, taxon_name = n, place_id = 1, maxresults = 5000, quality = "research")
+#}
 
 #rb2006 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
 #cb2006 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
