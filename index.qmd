@@ -14,7 +14,7 @@ With warming temperatures due to anthropogenic climate change, bird migration ti
 
 ![Ruby-throated Hummingbird](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of two spring ephemeral species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 7 to 10 years.
+I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of two spring ephemeral species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 7 years.
 
 ![Red Columbine](data/cb_1.jpg){fig-align="center" width="200"}
 
@@ -214,7 +214,7 @@ all_flower <- all_flower %>%
  
 ```
 
-7.  I found the mean date of first sightings of the selected flowers from 2000 to 2014 and from March to June (when these flowers bloom and ruby-throats migrate north; fl_early dataset) to compare data from the last 10 years. I separated sightings into 4 bands of latitude (in increments of approxiamtely 3, excepting 30 to 36, since there were so few observations).
+7.  I found the mean date of first sightings of the selected flowers from 2000 to 2017 and from March to June (when these flowers bloom and ruby-throats migrate north; fl_early dataset) to compare data from the last 7 years. I separated sightings into 4 bands of latitude (in increments of approxiamtely 3, excepting 30 to 36, since there were so few observations).
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -246,12 +246,12 @@ fl_early_all <- fl_early1 %>% full_join(fl_early2)
 
 ```
 
-8.  I created the dataset to see trends between 2015 and 2025, and in months March to June. I added a column (mean0014) to this new dataset where I added the means of the fl_early observations based on latitude. I separated the 36 to 42 band into 30 to 36 since there were more new observations to compare this early data to. I also created a difference column, showing the difference in days of arrival between the 2015 and 2025 dataset and the 2000 to 2014 average using mean - mean0014.I rejoined all of these bands into one dataset to plot on a map.
+8.  I created the dataset to see trends between 2018 and 2025, and in months March to June. I added a column (mean0017) to this new dataset where I added the means of the fl_early observations based on latitude. I separated the 36 to 42 band into 30 to 36 since there were more new observations to compare this early data to. I also created a difference column, showing the difference in days of arrival between the 2015 and 2025 dataset and the 2000 to 2014 average using mean - mean0014.I rejoined all of these bands into one dataset to plot on a map.
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
   filter(year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5, 6)) %>%
-  mutate(mean0014 = case_when(
+  mutate(mean0017 = case_when(
                           latitude > 30 & latitude < 33 ~ 103.2473,
                           latitude > 33 & latitude < 36 ~ 103.2473,
                           latitude > 36 & latitude < 39 ~ 104.8421,
@@ -262,32 +262,32 @@ flower_new <- all_flower %>%
 fl_30 <- flower_new %>%
   filter(latitude > 30 & latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_33 <- flower_new %>%
   filter(latitude > 33 & latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_36 <- flower_new %>%
   filter(latitude > 36 & latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_39 <- flower_new %>%
   filter(latitude > 39 & latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_42 <- flower_new %>%
   filter(latitude > 42 & latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_45 <- flower_new %>%
   filter(latitude > 45 & latitude < 50) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0014)
+  mutate(difference = mean - mean0017)
 
 fl_1 <- fl_30 %>% full_join(fl_33)
 fl_2 <- fl_36 %>% full_join(fl_39)
@@ -673,7 +673,7 @@ To download the Ruby-throated Hummingbird data from eBird on your own, visit: <h
 
 # Results
 
-### Trends in Flower Blooms (2015 - 2025)
+### Trends in Flower Blooms (2018 - 2025)
 
 ```{r}
 
@@ -725,7 +725,7 @@ Dates for each latitude band:
 
 -   42-45: May 17th (About 2 days earlier)
 
-### Average Bloom Time of Columbine and Red Buckeye (2015-2025)
+### Average Bloom Time of Columbine and Red Buckeye (2018 - 2025)
 
 ```{r}
 
@@ -733,7 +733,7 @@ ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smo
 
 ```
 
-### Average First Sighting Date of Ruby-throated Hummingbirds (2018-2025)
+### Average First Sighting Date of Ruby-throated Hummingbirds (2018 - 2025)
 
 ```{r}
 
@@ -765,7 +765,7 @@ leaflet(ruby_throat)%>%
 
 # Conclusions
 
-Trends for the preferred flowers have shown that its timing of first observations have changed from the 2000-2014 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling.
+Trends for the preferred flowers have shown that its timing of first observations have changed from the 2000-2017 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling.
 
 Similarly, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. But similarly to the flower trends, the observations at lower latitudes are happening later on average. This may be due to the experience of more mild winters.
 
