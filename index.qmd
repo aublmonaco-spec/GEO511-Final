@@ -379,7 +379,7 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 #Renamed latitude column for easier manipulation
 npn_rth <- read.csv("data/npn_rth.csv")
 npn_rth <- npn_rth %>%
-  rename(Latitude = latitude)
+  rename(Latitude = latitude, Longitude = longitude)
 
 ```
 Here's one example of my Journey North data download:
@@ -542,7 +542,7 @@ library(rvest)
 
 ```
 Here I joined all of my data:
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 #jn_table <- as.data.frame(jn_table)
 #write.csv(jn_table, "data/jn_table.csv")
@@ -557,7 +557,7 @@ rth_ebird <- rth_0014 %>% full_join(rth_1525)
 #Combined all data from iNaturalist, the NPN, and eBird
 rth_inat <- read.csv("data/rth_nat.csv")
 rth_inat <- rth_inat %>%
-  rename(Latitude = latitude) %>%
+  rename(Latitude = latitude, Longitude = longitude) %>%
   filter(captive_cultivated == "false" & quality_grade == "research")
 
 rth_some <- rth_ebird %>% full_join(rth_inat)
@@ -608,7 +608,7 @@ rthearly42 <- rth_early %>%
 
 10. I then similarly created the Ruby-throat dataset for 2017-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2005 to 2017 average using mean - mean0017.
   
-```{r}              
+```{r, warning=FALSE, message=FALSE}              
 
 rth_new_all <- ruby_throat %>%
   filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(3, 4, 5)) %>%
@@ -749,17 +749,6 @@ leaflet(all_flower)%>%
   addProviderTiles(provider = "Esri") %>%
   setView(-85.7664, 38.2469, zoom = 4) %>%
   addHeatmap()
-
-```
-
-### Observation Locations of Ruby-throats
-
-```{r}
-
-leaflet(ruby_throat)%>%
-  addProviderTiles(provider = "Esri") %>%
-  setView(-85.7664, 38.2469, zoom = 4) %>%
-  addHeatmap(lng = ruby_throat$Longitude, lat = ruby_throat$Latitude)
 
 ```
 
