@@ -577,30 +577,30 @@ ruby_throat <- rth_all %>%
   mutate(year_day = yday(date_new))
 
 rth_early <- ruby_throat %>%
-  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016) & Month %in% c(3,4,5))
+  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & Month %in% c(3,4,5,6))
 
 rthearly30 <- rth_early %>%
   filter(Month == 3) %>%
-  filter(Latitude > 29 & Latitude < 33) %>%
+  filter(Latitude > 30 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly33 <- rth_early %>%
-  filter(Month %in% c(3,4)) %>%
+  filter(Month == 3) %>%
   filter(Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly36 <- rth_early %>%
-   filter(Month == 4) %>%
+  filter(Month %in% c(3,4)) %>%
   filter(Latitude > 36 & Latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly39 <- rth_early %>%
-  filter(Month %in% c(4,5)) %>%
-  filter(Latitude > 39 & Latitude < 43) %>%
+  filter(Month %in% c(4,5,6)) %>%
+  filter(Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly42 <- rth_early %>%
-  filter(Month == 5) %>%
+  filter(Month %in% c(4,5,6)) %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
@@ -611,12 +611,12 @@ rthearly42 <- rth_early %>%
 ```{r, warning=FALSE, message=FALSE}              
 
 rth_new_all <- ruby_throat %>%
-  filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(3, 4, 5)) %>%
-  mutate(mean0017 = case_when(Latitude > 30 & Latitude < 33 ~ 77,
-                              Latitude > 33 & Latitude < 36 ~ 108.6842,
-                              Latitude > 36 & Latitude < 39 ~ 114.75,
-                              Latitude > 39 & Latitude < 42 ~ 130.5,
-                              Latitude > 42 & Latitude < 45 ~ 139.3095
+  filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5, 6)) %>%
+  mutate(mean0017 = case_when(Latitude > 30 & Latitude < 33 ~ 79.27027,
+                              Latitude > 33 & Latitude < 36 ~ 84.4,
+                              Latitude > 36 & Latitude < 39 ~ 110.5,
+                              Latitude > 39 & Latitude < 42 ~ 148.1182,
+                              Latitude > 42 & Latitude < 45 ~ 153.8993
                               ))                          
 
 rth_30 <- rth_new_all %>%
@@ -626,25 +626,25 @@ rth_30 <- rth_new_all %>%
   mutate(difference = mean - mean0017)
 
 rth_33 <- rth_new_all %>%
-  filter(Month %in% c(3,4)) %>%
+  filter(Month == 3) %>%
   filter(Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0017)
 
 rth_36 <- rth_new_all %>%
-  filter(Month == 4) %>%
+  filter(Month %in% c(3,4)) %>%
   filter(Latitude > 36 & Latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0017)
 
 rth_39 <- rth_new_all %>%
-  filter(Month == 4) %>%
+  filter(Month %in% c(4,5,6)) %>%
   filter(Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0017)
 
 rth_42 <- rth_new_all %>%
-  filter(Month %in% c(4,5)) %>%
+  filter(Month %in% c(4,5,6)) %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0017)
