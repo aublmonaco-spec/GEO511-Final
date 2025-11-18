@@ -10,11 +10,11 @@ editor_options:
 
 # Introduction
 
-With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Along with this ,flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may be changing the time of their first bloom due to climate change.
+With warming temperatures due to anthropogenic climate change, bird migration times are shifting, and they are tending to migrate back to their breeding grounds earlier each year. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (Archilochus colubris), feed on may be changing the time of their first bloom due to climate change.
 
 ![Ruby-throated Hummingbird](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of two spring ephemeral species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 7 years.
+I want to investigate how a pollinating bird species, the Ruby-throated Hummingbird, has been shifting its migration patterns and how the appearances of two spring ephemeral species it prefers to feed on, Red Buckeye (Aesculus pavia) and columbine (Aquilegia canadensis), has changed (or not changed) over the past 10 years.
 
 ![Red Columbine](data/cb_1.jpg){fig-align="center" width="200"}
 
@@ -618,7 +618,6 @@ rth_new_all <- ruby_throat %>%
             Latitude > 39 & Latitude < 42 ~ 135.087,
             Latitude > 42 & Latitude < 45 ~ 141.75
                               ))                          
-
 rth_30 <- rth_new_all %>%
   filter(Month %in% c(2,3)) %>%
   filter(Latitude > 30 & Latitude < 33) %>%
