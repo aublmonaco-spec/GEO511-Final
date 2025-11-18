@@ -219,7 +219,7 @@ all_flower <- all_flower %>%
 ```{r, message=FALSE, warning=FALSE}
 
 fl_early <- all_flower %>%
-  filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & month %in% c(3, 4, 5, 6))
+  filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & month %in% c(3, 4, 5, 6))
 
 fl_early_30 <- fl_early %>%
   filter(latitude > 30 & latitude < 36) %>%
@@ -230,64 +230,59 @@ fl_early_36 <- fl_early %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early_42 <- fl_early %>%
-  filter(latitude > 42 & latitude < 45) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_45 <- fl_early %>%
-  filter(latitude > 45 & latitude < 48) %>%
+  filter(latitude > 42 & latitude < 48) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early1 <- fl_early_30 %>% full_join(fl_early_36)
-fl_early2 <- fl_early_42 %>% full_join(fl_early_45)
-
-fl_early_all <- fl_early1 %>% full_join(fl_early2)
+fl_early_all <- fl_early_42 %>% full_join(fl_early1)
 
 #Checked each dataset for the mean bloom date
 
 ```
 
-8.  I created the dataset to see trends between 2018 and 2025, and in months March to June. I added a column (mean0017) to this new dataset where I added the means of the fl_early observations based on latitude. I separated the 36 to 42 band into 30 to 36 since there were more new observations to compare this early data to. I also created a difference column, showing the difference in days of arrival between the 2015 and 2025 dataset and the 2000 to 2014 average using mean - mean0014.I rejoined all of these bands into one dataset to plot on a map.
+8.  I created the dataset to see trends between 2014 and 2025, and in months March to June. I added a column (mean0013) to this new dataset where I added the means of the fl_early observations based on latitude. I separated the 36 to 42 band into 30 to 36 since there were more new observations to compare this early data to. I also created a difference column, showing the difference in days of arrival between the 2014 and 2025 dataset and the 2005 to 2013 average using mean - mean0013.I rejoined all of these bands into one dataset to plot on a map.
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
-  filter(year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5, 6)) %>%
-  mutate(mean0017 = case_when(
-                          latitude > 30 & latitude < 33 ~ 103.2473,
-                          latitude > 33 & latitude < 36 ~ 103.2473,
-                          latitude > 36 & latitude < 39 ~ 104.8421,
-                          latitude > 39 & latitude < 42 ~ 104.8421,
-                          latitude > 42 & latitude < 45 ~ 112.0147,
-                          latitude > 45 & latitude < 48 ~ 118))
+  filter(year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5, 6)) %>%
+  mutate(mean0013 = 
+         case_when(
+         latitude > 30 & latitude < 33 ~ 95.07143,
+         latitude > 33 & latitude < 36 ~ 95.07143,
+         latitude > 36 & latitude < 39 ~ 99.73333,
+         latitude > 39 & latitude < 42 ~ 99.73333,
+         latitude > 42 & latitude < 45 ~ 132.8696,
+         latitude > 45 & latitude < 48 ~ 132.8696))
 
 fl_30 <- flower_new %>%
   filter(latitude > 30 & latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_33 <- flower_new %>%
   filter(latitude > 33 & latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_36 <- flower_new %>%
   filter(latitude > 36 & latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_39 <- flower_new %>%
   filter(latitude > 39 & latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_42 <- flower_new %>%
   filter(latitude > 42 & latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_45 <- flower_new %>%
   filter(latitude > 45 & latitude < 50) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 fl_1 <- fl_30 %>% full_join(fl_33)
 fl_2 <- fl_36 %>% full_join(fl_39)
@@ -300,7 +295,7 @@ fl_new_all <- fl_3 %>%
 
 ```
 
-9.  I followed the same steps to find data for Ruby-throated Hummingbird migration and found their average arrival dates for various latitudes between 2000 and 2017 (since more data for this early period was needed). I used data from eBird and Journey North in addition to iNaturalist and the US National Phenology Network.
+9.  I followed the same steps to find data for Ruby-throated Hummingbird migration and found their average arrival dates for various latitudes between 2005 and 2013. I used data from eBird and Journey North in addition to iNaturalist and the US National Phenology Network.
 
 My eBird datasets can be found on figshare here:
 
@@ -577,15 +572,15 @@ ruby_throat <- rth_all %>%
   mutate(year_day = yday(date_new))
 
 rth_early <- ruby_throat %>%
-  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017) & Month %in% c(3,4,5,6))
+  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & Month %in% c(2,3,4,5))
 
 rthearly30 <- rth_early %>%
-  filter(Month == 3) %>%
-  filter(Latitude > 30 & Latitude < 33) %>%
+  filter(Month %in% c(2,3)) %>%
+  filter(Latitude > 29 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly33 <- rth_early %>%
-  filter(Month == 3) %>%
+  filter(Month %in% c(3,4)) %>%
   filter(Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
@@ -595,59 +590,60 @@ rthearly36 <- rth_early %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly39 <- rth_early %>%
-  filter(Month %in% c(4,5,6)) %>%
+  filter(Month %in% c(4,5)) %>%
   filter(Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly42 <- rth_early %>%
-  filter(Month %in% c(4,5,6)) %>%
+  filter(Month %in% c(4,5)) %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 ```
 
-10. I then similarly created the Ruby-throat dataset for 2017-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2005 to 2017 average using mean - mean0017.
+10. I then similarly created the Ruby-throat dataset for 2014-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2005 to 2013 average using mean - mean0013.
   
 ```{r, warning=FALSE, message=FALSE}              
 
 rth_new_all <- ruby_throat %>%
-  filter(Year %in% c(2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5, 6)) %>%
-  mutate(mean0017 = case_when(Latitude > 30 & Latitude < 33 ~ 79.27027,
-                              Latitude > 33 & Latitude < 36 ~ 84.4,
-                              Latitude > 36 & Latitude < 39 ~ 110.5,
-                              Latitude > 39 & Latitude < 42 ~ 148.1182,
-                              Latitude > 42 & Latitude < 45 ~ 153.8993
+  filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
+  mutate(mean0013 = 
+  case_when(Latitude > 30 & Latitude < 33 ~ 77,
+            Latitude > 33 & Latitude < 36 ~ 109.2778,
+            Latitude > 36 & Latitude < 39 ~ 112.6667,
+            Latitude > 39 & Latitude < 42 ~ 135.087,
+            Latitude > 42 & Latitude < 45 ~ 141.75
                               ))                          
 
 rth_30 <- rth_new_all %>%
-  filter(Month == 3) %>%
+  filter(Month %in% c(2,3)) %>%
   filter(Latitude > 30 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 rth_33 <- rth_new_all %>%
-  filter(Month == 3) %>%
+  filter(Month %in% c(3,4)) %>%
   filter(Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 rth_36 <- rth_new_all %>%
   filter(Month %in% c(3,4)) %>%
   filter(Latitude > 36 & Latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 rth_39 <- rth_new_all %>%
-  filter(Month %in% c(4,5,6)) %>%
+  filter(Month %in% c(4,5)) %>%
   filter(Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 rth_42 <- rth_new_all %>%
-  filter(Month %in% c(4,5,6)) %>%
+  filter(Month %in% c(4,5)) %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0017)
+  mutate(difference = mean - mean0013)
 
 rth_1 <- rth_30 %>% full_join(rth_33)
 rth_2 <- rth_36 %>% full_join(rth_39)
@@ -673,7 +669,7 @@ To download the Ruby-throated Hummingbird data from eBird on your own, visit: <h
 
 # Results
 
-### Trends in Flower Blooms (2018 - 2025)
+### Trends in Flower Blooms (2014 - 2025)
 
 ```{r}
 
@@ -688,19 +684,19 @@ leaflet(fl_new_all) %>%
 
 Dates for each latitude band:
 
--   30-33: April 19th (About 6 days later)
+-   30-33: April 19th (About 14 days later)
 
--   33-36: April 17th (About 4 days later)
+-   33-36: April 17th (About 12 days later)
 
--   36-39: April 17th (About 2 days later)
+-   36-39: April 17th (About 8 days later)
 
--   39-42: April 18th (About 4 days later)
+-   39-42: April 18th (About 9 days later)
 
--   42-45: April 20th (About 2 days earlier)
+-   42-45: April 20th (About 22 days earlier)
 
--   45-50: April 19th (About 9 days earlier)
+-   45-50: April 20th (About 23 days earlier)
 
-### Trends in Ruby-Throated Hummingbird Sightings (2018 - 2025)
+### Trends in Ruby-Throated Hummingbird Sightings (2014 - 2025)
 
 ```{r}
 
@@ -715,17 +711,17 @@ leaflet(rubythroat_all) %>%
 
 Dates for each latitude band:
 
--   30-33: March 20th (About 2 days later)
+-   30-33: March 15th (About 2 days later)
 
--   33-36: April 13th (About 6 days earlier)
+-   33-36: April 12th (About 7 days earlier)
 
--   36-39: April 19th (About 6 days earlier)
+-   36-39: April 19th (About 4 days earlier)
 
--   39-42: April 27th (About the same (About 14 days earlier)
+-   39-42: May 13th (About 2 days earlier)
 
--   42-45: May 17th (About 2 days earlier)
+-   42-45: May 17th (About 4 days earlier)
 
-### Average Bloom Time of Columbine and Red Buckeye (2018 - 2025)
+### Average Bloom Time of Columbine and Red Buckeye (2014 - 2025)
 
 ```{r}
 
@@ -733,7 +729,7 @@ ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smo
 
 ```
 
-### Average First Sighting Date of Ruby-throated Hummingbirds (2018 - 2025)
+### Average First Sighting Date of Ruby-throated Hummingbirds (2014 - 2025)
 
 ```{r}
 
