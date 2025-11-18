@@ -24,7 +24,7 @@ I predict that Ruby-throated Hummingbirds are migrating back earlier each year, 
 
 # Materials and methods
 
-1.  I installed leaflet, for making maps, along with rinat and rnpn to download data from iNaturalist and the US National Phenology Network, respectively. I then loaded my necessary libraries. I used dplyr to mutate and filter data, lubridate to parse date data, ggplot2 for plotting, and profvis to check code efficiency.
+1.  I installed leaflet and leaflet.extras for making maps, along with rinat and rnpn to download data from iNaturalist and the US National Phenology Network, respectively. I then loaded my necessary libraries. I used dplyr to mutate and filter data, lubridate to parse date data, and ggplot2 for plotting.
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -43,7 +43,7 @@ library(rnpn)
 
 ```
 
-2.  I loaded my data from iNaturalist and the US National Phenology Network and joined my data into one set.
+2.  I loaded my data from iNaturalist and the US National Phenology Network.
 
 -   I repeated the below process of downloading iNaturalist observational data using the rinat package for each year from 2005 to 2025, saving each to an object, and combining species data to have a dataset for each year. The functions are commented out after running them once so that they do not start each time the code is run.
 
@@ -165,7 +165,7 @@ library(rnpn)
 
 ```
 
-3.  I combined the datasets from each year into one whole set. I then converted this data into a csv, and loaded it into my environment as nat_flower to deisgnate data from iNaturalist. I filtered nat_flower to only include wild sightings of the selected species (captive_cultivated = "false").
+3.  I combined the datasets from each year into one set. I  converted this data into a csv so I do not have to download the data each time I run the code, and loaded it into my environment as "nat_flower". I filtered nat_flower to only include wild sightings of the selected species (captive_cultivated = "false").
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -179,7 +179,7 @@ nat_flower <- nat_flower %>%
 
 ```
 
-4.  I then used the rnpn package to download data for the plant species from the National Phenology Network (which automatically saves as a csv). The species IDs were available through the NPN's website (Red Buckeye = 784, columbine = 147).
+4.  I used the rnpn package to download data for the plant species from the National Phenology Network (which automatically saves as a csv). The species IDs were available through the NPN's website (Red Buckeye = 784, columbine = 147).
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -194,7 +194,7 @@ npn_flower <- read.csv("data/npn_flower.csv")
 
 ```
 
-5.  I then combined my iNaturalist and NPN data into one dataset.
+5.  I combined my iNaturalist and NPN data into one dataset.
 
 ```{r}
 
@@ -202,7 +202,7 @@ all_flower <- nat_flower %>% full_join(npn_flower)
 
 ```
 
-6.  I used the Lubridate package to standardize the format all of the dates in my flower data. Then, I used this standardized data to create a year column, where I pulled the year from the dates, a year_day column, to transform the date into a day out of 365, and a month column to pull the month from the dates.
+6.  I used the Lubridate package to standardize the format all of the dates in my flower data. Then, I used these standardized dates to create a year column, where I pulled the year from the dates, a year_day column, to transform the date into a day out of 365, and a month column to pull the month from the dates.
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -214,7 +214,7 @@ all_flower <- all_flower %>%
  
 ```
 
-7.  I found the mean date of first sightings of the selected flowers from 2000 to 2017 and from March to June (when these flowers bloom and ruby-throats migrate north; fl_early dataset) to compare data from the last 7 years. I separated sightings into 4 bands of latitude (in increments of approxiamtely 3, excepting 30 to 36, since there were so few observations).
+7.  I found the mean date of first sightings of the selected flowers from 2005 to 2013 and from March to June (when these flowers bloom; fl_early dataset) to compare data from the last 11 years. I separated sightings into 3 bands of latitude (to account for few observations).
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -240,7 +240,7 @@ fl_early_all <- fl_early_42 %>% full_join(fl_early1)
 
 ```
 
-8.  I created the dataset to see trends between 2014 and 2025, and in months March to June. I added a column (mean0013) to this new dataset where I added the means of the fl_early observations based on latitude. I separated the 36 to 42 band into 30 to 36 since there were more new observations to compare this early data to. I also created a difference column, showing the difference in days of arrival between the 2014 and 2025 dataset and the 2005 to 2013 average using mean - mean0013.I rejoined all of these bands into one dataset to plot on a map.
+8.  I created the dataset to see trends between 2014 and 2025, and in months March to June. I added a column (mean0013) with the means of the fl_early observations based on latitude. I separated the 3 early bands into 6, using the same mean for 2 bands. I also created a difference column, showing the difference in days of arrival between the 2014 and 2025 and the 2005 to 2013 average using mean - mean0013.I rejoined all of these bands into one dataset for plotting.
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
@@ -295,7 +295,7 @@ fl_new_all <- fl_3 %>%
 
 ```
 
-9.  I followed the same steps to find data for Ruby-throated Hummingbird migration and found their average arrival dates for various latitudes between 2005 and 2013. I used data from eBird and Journey North in addition to iNaturalist and the US National Phenology Network.
+9.  I followed the same steps to find data for Ruby-throated Hummingbird spring migration and found their average arrival dates between 2005 and 2013. I used data from eBird and Journey North in addition to iNaturalist and the US National Phenology Network.
 
 My eBird datasets can be found on figshare here:
 
@@ -354,7 +354,7 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 #rth2025 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2025, place_id = 1, maxresults = 10000)
 
 ```
-
+Here's is my initial combining of iNaturalist data and the NPN download:
 ```{r, warning=FALSE, message=FALSE}
 
 #Combined all iNat data into one data set for Ruby-Throats
@@ -379,7 +379,7 @@ npn_rth <- npn_rth %>%
 ```
 Here's one example of my Journey North data download:
 ```{r}
-
+#rvest used to take data from the urls
 library(rvest)
 
 #jn_05 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2005&submit=View+Data"
@@ -574,6 +574,10 @@ ruby_throat <- rth_all %>%
 rth_early <- ruby_throat %>%
   filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & Month %in% c(2,3,4,5))
 
+```
+Here is my code for finding the early Ruby-throat arrival dates:
+```{r, message=FALSE, warning=FALSE}
+
 rthearly30 <- rth_early %>%
   filter(Month %in% c(2,3)) %>%
   filter(Latitude > 29 & Latitude < 33) %>%
@@ -601,7 +605,7 @@ rthearly42 <- rth_early %>%
 
 ```
 
-10. I then similarly created the Ruby-throat dataset for 2014-2025, but I added 3 more bands of latitude to account for the larger number of observations recorded at higher and lower latitudes. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2005 to 2013 average using mean - mean0013.
+10. I then similarly created the Ruby-throat dataset for 2014-2025. I again combined these bands into one dataset, and created a difference column, showing the difference in days of arrival between the new dataset and the 2005 to 2013 average using mean - mean0013.
   
 ```{r, warning=FALSE, message=FALSE}              
 
@@ -653,7 +657,7 @@ rubythroat_all <- rth_2 %>% full_join(rth_3)
 
 ```
 
-11. I then created color palettes using viridis scales and colorNumeric from the Leaflet package for my two maps, specifying to use the difference column in each dataset to map the colors to.
+11. I created color palettes using viridis scales and colorNumeric from the Leaflet package for my two maps, specifying to use the difference column in each dataset to map the colors to.
 
 ```{r}
 
@@ -750,13 +754,13 @@ leaflet(all_flower)%>%
 
 # Conclusions
 
-Trends for the preferred flowers have shown that its timing of first observations have changed from the 2000-2017 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling.
+Trends for the preferred flowers have shown that its timing of first observations have changed from the 2005-2013 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 39, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling.
 
-Similarly, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. But similarly to the flower trends, the observations at lower latitudes are happening later on average. This may be due to the experience of more mild winters.
+Similarly, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes.
 
-These trends do somewhat align. All flower bloom times occur around or before the average date of Ruby-throat sighting. Ruby-throats thus may move back earlier, especially to higher latitudes, since their food is available.
+These trends do somewhat align. All flower bloom times occur around or before the average date of Ruby-throat sightings. Ruby-throats thus may migrate back earlier, especially to higher latitudes, since their food is available earlier.
 
-It is important to note, though, that this dataset is relatively small and data used to acquire average arrival/bloom dates for 2005 to 2014 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. As shown in the heatmap, observations do tend to be concentrated in urban areas. For Ruby-throats, the data was more plentiful for higher latitudes.
+It is important to note, though, that this dataset is relatively small and data used to acquire average arrival/bloom dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. As shown in the heatmap for the flowers, observations do tend to be concentrated in urban areas. For Ruby-throats, the data was more plentiful for higher latitudes.
 
 # References
 
