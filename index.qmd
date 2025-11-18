@@ -61,7 +61,8 @@ library(rnpn)
 #fl_2005 <- rbind(rb2005, cb2005)
 ```
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 #rb2006 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
 #cb2006 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
@@ -311,7 +312,8 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 
 ```
 
-```{r, message=FALSE, warning=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 #rth2006 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2006, place_id = 1, maxresults = 5000)
 
@@ -391,7 +393,7 @@ library(rvest)
 
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, collapse=TRUE, warning=FALSE, message=FALSE}
 
 #jn_06 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2006&submit=View+Data"
 #jn06 <- read_html(jn_06)
