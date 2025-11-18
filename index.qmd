@@ -240,7 +240,7 @@ fl_early_all <- fl_early_42 %>% full_join(fl_early1)
 
 ```
 
-8.  I created the dataset to see trends between 2014 and 2025, and in months March to June. I added a column (mean0013) with the means of the fl_early observations based on latitude. I separated the 3 early bands into 6, using the same mean for 2 bands. I also created a difference column, showing the difference in days of arrival between the 2014 and 2025 and the 2005 to 2013 average using mean - mean0013.I rejoined all of these bands into one dataset for plotting.
+8.  I created the dataset to see trends between 2014 and 2025, and in months March to June. I added a column (mean0013) with the means of the fl_early observations based on latitude. I separated the 3 early bands into 6, using the same mean for 2 bands. I also created a difference column, showing the difference in days of arrival between the 2014 and 2025 and the 2005 to 2013 average using mean - mean0013. I rejoined all of these bands into one dataset for plotting.
 
 ```{r, message=FALSE, warning=FALSE}
 flower_new <- all_flower %>%
@@ -354,7 +354,7 @@ Here is one example of my iNaturalist data download for Ruby-Throats:
 #rth2025 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2025, place_id = 1, maxresults = 10000)
 
 ```
-Here's is my initial combining of iNaturalist data and the NPN download:
+Here is my initial combining of iNaturalist data and the NPN download:
 ```{r, warning=FALSE, message=FALSE}
 
 #Combined all iNat data into one data set for Ruby-Throats
@@ -377,7 +377,7 @@ npn_rth <- npn_rth %>%
   rename(Latitude = latitude, Longitude = longitude)
 
 ```
-Here's one example of my Journey North data download:
+Here is one example of my Journey North data download:
 ```{r}
 #rvest used to take data from the urls
 library(rvest)
