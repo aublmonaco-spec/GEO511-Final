@@ -568,6 +568,7 @@ npn_rth <- npn_rth %>%
 - Joining all data:
 
 ```{r, warning=FALSE, message=FALSE}
+#| code-fold: TRUE
 
 #jn_table <- as.data.frame(jn_table)
 #write.csv(jn_table, "data/jn_table.csv")
@@ -576,9 +577,6 @@ jn_table <- read.csv("data/jn_table.csv")
 #Datasets from eBird
 rth_0513 <- read.csv("data/RTH_1995_2021.csv")
 rth_1425 <- read.csv("data/RTH_2022_2025.csv")
-```
-
-```{r, warning=FALSE, message=FALSE}
 
 rth_ebird <- rth_0513 %>% full_join(rth_1425)
 
@@ -599,7 +597,8 @@ all_rth <- rth_most %>% full_join(npn_rth)
 - Parsing, mutating, and filtering Ruby-throat data based on their migration timeframe of February to May [9]
 
 ```{r, message=FALSE, warning=FALSE}
-
+#| code-fold: TRUE
+ 
 all_rth <- all_rth %>%
   mutate(date_new = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
   mutate(year_new = year(date_new)) %>%
@@ -614,6 +613,7 @@ rth_early <- all_rth %>%
 - Bands are further filtered by month to account for their usual arrival times based on Courter et al., 2013 and Journey North maps
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 rthearly30 <- rth_early %>%
   filter(Month %in% c(2,3)) %>%
@@ -640,11 +640,18 @@ rthearly42 <- rth_early %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
+rthearly1 <- rthearly30 %>% full_join(rthearly33)
+rthearly2 <- rthearly36 %>% full_join(rthearly39)
+rthearly3 <- rthearly1 %>% full_join(rthearly42)
+
+rth_early_all <- rthearly2 %>% full_join(rthearly3)
+
 ```
 
 - 2014-2025 Ruby-throat dataset:
 
 ```{r, warning=FALSE, message=FALSE}
+#| code-fold: TRUE
 
 rth_new <- all_rth %>%
   filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
@@ -759,76 +766,25 @@ Dates for each latitude band:
 
 -   42-45: May 17th (About 4 days earlier)
 
-### Average Bloom Time of Columbine and Red Buckeye (2014 - 2025)
+### Average Bloom/Arrival Times (2005-2013)
 
 ```{r}
 
-ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + labs(title = "Average Bloom Time of Columbine and Red Buckeye", x = "Mean Bloom Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
+ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_early_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_early_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_early_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2005-2013)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
 
 ```
 
-Generally, the average day of Red Columbine and Red Buckeye bloom sightings increase with latitude.
+Generally, Red Columbine and Red Buckeye flowering is spread over a large portion of Ruby-throat migration.
 
-### Average First Sighting Date of Ruby-throated Hummingbirds (2014 - 2025)
+### Average Bloom/Arrival Times (2014-2025)
 
 ```{r}
 
-ggplot() + geom_point(data = rth_new_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_new_all, aes(x = mean, y = Latitude), method = "lm", color = "darkblue") + labs(title = "Average First Sighting Date of Ruby-throated Hummingbirds", x = "Mean Sighting Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "pink"))
+ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_new_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_new_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2014-2025)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
 
 ```
 
-Generally, the average day of Ruby-throat sightings increase with latitude.
-
-### Numbers of Flower Observations
-```{r}
-#| code-fold: TRUE
-
-early_fl_plot <- all_flower %>%
-  filter(month %in% c(3,4,5) & year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
-  group_by(month) %>%
-  summarise(n()) %>%
-  rename(number = "n()")
-
-new_fl_plot <- all_flower %>%
-  filter(month %in% c(3,4,5) & year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
-  group_by(month) %>%
-  summarise(n()) %>%
-  rename(number = "n()")
-
-```
-
-```{r}
-
-ggplot() + geom_line(data = early_fl_plot, aes(x = month, y = number), color = "darkblue") + geom_line(data = new_fl_plot, aes(x = month, y = number, color = month), color = "darkred") + labs(title = "Flower Observations Over Time", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
-
-```
-
-Flower observations for 2014-2015 (dark red line) are higher and start earlier as compared to the 2005-2013 period (dark blue line).
-
-### Numbers of Ruby-throat Observations
-```{r}
-#| code-fold: TRUE
-
-early_rth_plot <- all_rth %>%
-  filter(Month %in% c(2,3,4,5) & Year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
-  group_by(Month) %>%
-  summarise(n()) %>%
-  rename(number = "n()")
-
-new_rth_plot <- all_rth %>%
-  filter(Month %in% c(2,3,4,5) & Year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
-  group_by(Month) %>%
-  summarise(n()) %>%
-  rename(number = "n()")
-
-```
-
-```{r}
-
-ggplot() + geom_line(data = early_rth_plot, aes(x = Month, y = number), color = "darkblue") + geom_line(data = new_rth_plot, aes(x = Month, y = number), color = "darkred")  + labs(title = "Flower Observations Over Time", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
-
-```
-Ruby-throat observations for 2014-2015 (dark red line) are increasingly higher and start earlier as compared to the 2005-2013 period (dark blue line).
+Generally, Red Columbine and Red Buckeye flowering happens over a shorter time within Ruby-throat spring migration.
 
 ### Observation Locations of Flowers
 
