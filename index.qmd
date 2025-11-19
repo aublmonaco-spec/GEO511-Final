@@ -783,6 +783,47 @@ ggplot() + geom_point(data = rth_new_all, aes(x = mean, y = Latitude)) + geom_sm
 
 Generally, the average day of Ruby-throat sightings increase with latitude.
 
+### Numbers of Flower Observations
+```{r}
+
+early_fl_plot <- all_flower %>%
+  filter(month %in% c(3,4,5) & year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
+  group_by(month) %>%
+  summarise(n()) %>%
+  rename(number = "n()")
+
+new_fl_plot <- all_flower %>%
+  filter(month %in% c(2,3,4,5) & year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
+  group_by(month) %>%
+  summarise(n()) %>%
+  rename(number = "n()")
+
+ggplot() + geom_line(data = early_fl_plot, aes(x = month, y = number), color = "darkblue") + geom_line(data = new_fl_plot, aes(x = month, y = number, color = month), color = "darkred") + labs(title = "Comparing Flower Observations", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
+
+```
+
+Flower observations for 2014-2015 (dark red line) are higher and start earlier as compared to the 2005-2013 period (dark blue line).
+
+### Numbers of Ruby-throat Observations
+```{r}
+
+early_rth_plot <- all_rth %>%
+  filter(Month %in% c(2,3,4,5) & Year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
+  group_by(Month) %>%
+  summarise(n()) %>%
+  rename(number = "n()")
+
+new_rth_plot <- all_rth %>%
+  filter(Month %in% c(2,3,4,5) & Year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
+  group_by(Month) %>%
+  summarise(n()) %>%
+  rename(number = "n()")
+
+ggplot() + geom_line(data = early_rth_plot, aes(x = Month, y = number), color = "darkblue") + geom_line(data = new_rth_plot, aes(x = Month, y = number), color = "darkred")  + labs(title = "Comparing Ruby-throat Observations", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
+
+```
+Ruby-throat observations for 2014-2015 (dark red line) are increasingly higher and start earlier as compared to the 2005-2013 period (dark blue line).
+
 ### Observation Locations of Flowers
 
 ```{r}
