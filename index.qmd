@@ -1,7 +1,7 @@
 ---
-title: "Phenological Mismatches in Pollination Pals"
+title: "Phenological Changes in Pollination Pals"
 author: Aubrey Monaco
-subtitle: Phenological Shifts in the Ruby-Throated Hummingbird and its Preferred Flowers
+subtitle: Synchrony Shifts in the Ruby-Throated Hummingbird and Preferred Flowers
 date: today
 date-format: long
 editor_options:
@@ -328,18 +328,14 @@ Visit each link and click "download"
 
 Or:
 
-To download the Ruby-throated Hummingbird data from eBird on your own, visit: <https://media.ebird.org/catalog?birdOnly=true&taxonCode=rthhum>, filter by year (I did this in two separate actions \[1995-2021 and 2022-2025\] to ensure I could download all of the data), filter by location (United States), and download as a csv.
+Download the Ruby-throated Hummingbird data from eBird by visiting: <https://media.ebird.org/catalog?birdOnly=true&taxonCode=rthhum>, filter by year (I did this in two separate actions \[1995-2021 and 2022-2025\] to ensure I could download all of the data), filter by location (United States), and download as a csv.
 
 - iNaturalist data download example:
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 #rth2005 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2005, place_id = 1, maxresults = 5000)
-
-```
-
-```{r, message=FALSE, warning=FALSE}
-#| code-fold: TRUE
 
 #rth2006 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2006, place_id = 1, maxresults = 5000)
 
@@ -569,7 +565,7 @@ npn_rth <- npn_rth %>%
 
 ```
 
-- Joined all data:
+- Joining all data:
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -591,10 +587,10 @@ rth_inat <- rth_inat %>%
   rename(Latitude = latitude, Longitude = longitude) %>% # Renaming for joining
   filter(captive_cultivated == "false" & quality_grade == "research") # Filtered to ensure I had verified data and wild sightings
 
-rth_some <- rth_ebird %>% full_join(rth_inat)
+rth_some <- rth_ebird %>% full_join(rth_inat, relationship = "many-to-many")
 rth_more <- rth_some %>% full_join(jn_table)
 
-rth_most <- rth_some %>% full_join(rth_more)
+rth_most <- rth_some %>% full_join(rth_more, relationship = "many-to-many")
 
 all_rth <- rth_most %>% full_join(npn_rth)
 
@@ -785,6 +781,7 @@ Generally, the average day of Ruby-throat sightings increase with latitude.
 
 ### Numbers of Flower Observations
 ```{r}
+#| code-fold: TRUE
 
 early_fl_plot <- all_flower %>%
   filter(month %in% c(3,4,5) & year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
@@ -793,12 +790,16 @@ early_fl_plot <- all_flower %>%
   rename(number = "n()")
 
 new_fl_plot <- all_flower %>%
-  filter(month %in% c(2,3,4,5) & year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
+  filter(month %in% c(3,4,5) & year %in% c(2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025)) %>%
   group_by(month) %>%
   summarise(n()) %>%
   rename(number = "n()")
 
-ggplot() + geom_line(data = early_fl_plot, aes(x = month, y = number), color = "darkblue") + geom_line(data = new_fl_plot, aes(x = month, y = number, color = month), color = "darkred") + labs(title = "Comparing Flower Observations", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
+```
+
+```{r}
+
+ggplot() + geom_line(data = early_fl_plot, aes(x = month, y = number), color = "darkblue") + geom_line(data = new_fl_plot, aes(x = month, y = number, color = month), color = "darkred") + labs(title = "Flower Observations Over Time", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
 
 ```
 
@@ -806,6 +807,7 @@ Flower observations for 2014-2015 (dark red line) are higher and start earlier a
 
 ### Numbers of Ruby-throat Observations
 ```{r}
+#| code-fold: TRUE
 
 early_rth_plot <- all_rth %>%
   filter(Month %in% c(2,3,4,5) & Year %in% c(2005,2006,2007,2008,2009,2010,2011,2012,2013)) %>%
@@ -819,7 +821,11 @@ new_rth_plot <- all_rth %>%
   summarise(n()) %>%
   rename(number = "n()")
 
-ggplot() + geom_line(data = early_rth_plot, aes(x = Month, y = number), color = "darkblue") + geom_line(data = new_rth_plot, aes(x = Month, y = number), color = "darkred")  + labs(title = "Comparing Ruby-throat Observations", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
+```
+
+```{r}
+
+ggplot() + geom_line(data = early_rth_plot, aes(x = Month, y = number), color = "darkblue") + geom_line(data = new_rth_plot, aes(x = Month, y = number), color = "darkred")  + labs(title = "Flower Observations Over Time", x = "Month", y = "Number of Observations") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightgray"))
 
 ```
 Ruby-throat observations for 2014-2015 (dark red line) are increasingly higher and start earlier as compared to the 2005-2013 period (dark blue line).
@@ -859,7 +865,7 @@ It is important to note that this dataset is relatively small, and data used to 
 
 6. Red Buckeye (Aesculus pavia). (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/taxa/81708-Aesculus-pavia>
 
-7. Red Columbine. USDA.
+7. Red Columbine. (2004). Retrieved November 19, 2025, from <https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_aqca.pdf>
 
 8. USDA Plants Database Plant Profile General. (n.d.). Retrieved November 19, 2025, from <https://plants.usda.gov/plant-profile/AEPA>
 
