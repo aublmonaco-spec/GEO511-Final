@@ -31,10 +31,14 @@ I predict that Ruby-throated Hummingbirds are migrating back to their breeding g
 ```{r, message=FALSE, warning=FALSE}
 
 #install.packages("leaflet") # Dynamic maps
+#install.packages("leaflet.providers") # Different Basemaps
 #install.packages("leaflet.extras") # Heatmaps
 #install.packages("rinat") # Downloads iNaturalist data
 #install.packages("rnpn") # Downloads US National Phenology Network Data
+#install.packages("plotly") # Interactive graphs
+library(plotly)
 library(leaflet)
+library(leaflet.providers)
 library(leaflet.extras)
 library(rinat)
 library(rnpn)
@@ -719,9 +723,14 @@ rpal <- colorNumeric(palette = "viridis", domain = rth_new_all$difference, na.co
 ```{r}
 
 leaflet(fl_new_all) %>%
-  addProviderTiles(provider = "Esri") %>%
+  addProviderTiles(providers$Esri.WorldStreetMap, group = "World Map") %>%
+  addProviderTiles(providers$OpenTopoMap, group = "Topo Map") %>%
+  addLayersControl(
+    baseGroups = c("World Map","Topo Map"),
+    options = layersControlOptions(collapsed = FALSE)
+    ) %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~longitude, ~ latitude, radius = 5, stroke = FALSE, color = ~cpal(difference)) %>%
+  addCircleMarkers(~longitude, ~ latitude, radius = 5, stroke = FALSE, color = ~cpal(difference), label = ~scientific_name) %>%
   addLegend(pal = cpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") %>%
   setView(-94.5786, 39.0997, zoom = 4)
 
@@ -746,9 +755,14 @@ Dates for each latitude band:
 ```{r}
 
 leaflet(rth_new_all) %>%
-  addProviderTiles(provider = "Esri") %>%
+  addProviderTiles(providers$Esri.WorldStreetMap, group = "World Map") %>%
+  addProviderTiles(providers$OpenTopoMap, group = "Topo Map") %>%
+  addLayersControl(
+    baseGroups = c("World Map","Topo Map"),
+    options = layersControlOptions(collapsed = FALSE)
+    ) %>%
   addSimpleGraticule(interval = 3) %>%
-  addCircleMarkers(~Longitude, ~ Latitude, radius = 5, stroke = FALSE, color = ~rpal(difference)) %>%
+  addCircleMarkers(~Longitude, ~ Latitude, radius = 5, stroke = FALSE, color = ~rpal(difference), label = ~Age.Sex) %>%
   addLegend(pal = rpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") %>%
   setView(-94.5786, 39.0997, zoom = 4)
 
@@ -770,7 +784,9 @@ Dates for each latitude band:
 
 ```{r}
 
-ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_early_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_early_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_early_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2005-2013)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
+early_plot <- ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_early_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_early_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_early_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2005-2013)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
+
+ggplotly(early_plot)
 
 ```
 
@@ -780,7 +796,9 @@ Generally, Red Columbine and Red Buckeye flowering is spread over a large portio
 
 ```{r}
 
-ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_new_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_new_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2014-2025)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
+late_plot <- ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude, color = mean)) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude), method = "lm", color = "darkred") + geom_point(data = rth_new_all, aes(x = mean, y = Latitude)) + geom_smooth(data = rth_new_all, aes(x = mean, y = Latitude, color = mean), method = "lm", color = "darkblue") + labs(title = "Average Bloom/Arrival Times (2014-2025)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"))
+
+ggplotly(late_plot)
 
 ```
 

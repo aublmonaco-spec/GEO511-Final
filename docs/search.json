@@ -32,7 +32,7 @@
     "href": "index.html#install-packages-and-load-libraries",
     "title": "Phenological Changes in Pollination Pals",
     "section": "1. Install Packages and Load Libraries",
-    "text": "1. Install Packages and Load Libraries\n\n#install.packages(\"leaflet\") # Dynamic maps\n#install.packages(\"leaflet.extras\") # Heatmaps\n#install.packages(\"rinat\") # Downloads iNaturalist data\n#install.packages(\"rnpn\") # Downloads US National Phenology Network Data\nlibrary(leaflet)\nlibrary(leaflet.extras)\nlibrary(rinat)\nlibrary(rnpn)\nlibrary(rvest) # Used to download data from Journey North\nlibrary(dplyr) # Mutating and filtering data\nlibrary(lubridate) # Parsing date data\nlibrary(ggplot2) # Plotting trends"
+    "text": "1. Install Packages and Load Libraries\n\n#install.packages(\"leaflet\") # Dynamic maps\n#install.packages(\"leaflet.providers\") # Different Basemaps\n#install.packages(\"leaflet.extras\") # Heatmaps\n#install.packages(\"rinat\") # Downloads iNaturalist data\n#install.packages(\"rnpn\") # Downloads US National Phenology Network Data\n#install.packages(\"plotly\") # Interactive graphs\nlibrary(plotly)\nlibrary(leaflet)\nlibrary(leaflet.providers)\nlibrary(leaflet.extras)\nlibrary(rinat)\nlibrary(rnpn)\nlibrary(rvest) # Used to download data from Journey North\nlibrary(dplyr) # Mutating and filtering data\nlibrary(lubridate) # Parsing date data\nlibrary(ggplot2) # Plotting trends"
   },
   {
     "objectID": "index.html#flowers-load-inaturalist-and-us-npn-data.",
