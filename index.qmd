@@ -73,106 +73,18 @@ library(ggplot2) # Plotting trends
 
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: TRUE
+#| eval: FALSE
 
-#rb2006 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
-#cb2006 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2006, place_id = 1, maxresults = 5000, quality = "research")
+years <- 2005:2025
+fl_list <- list()
 
-#fl_2006 <- rbind(rb2006, cb2006)
+for (i in 1:length(years)) {
+  rb <- get_inat_obs(taxon_name = "Aesculus pavia", year = years[i], place_id = 1, maxresults = 5000, quality = "research")
+  cb <- cb <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = years[i], place_id = 1, maxresults = 5000, quality = "research")
+  fl_list[[i]] <- rbind(rb, cb)
+}
 
-#rb2007 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2007, place_id = 1, maxresults = 5000, quality = "research")
-#cb2007 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2007, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2007 <- rbind(rb2007, cb2007)
-
-#rb2008 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2008, place_id = 1, maxresults = 5000, quality = "research")
-#cb2008 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2008, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2008 <- rbind(rb2008, cb2008)
-
-#rb2009 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2009, place_id = 1, maxresults = 5000, quality = "research")
-#cb2009 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2009, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2009 <- rbind(rb2009, cb2009)
-
-#rb2010 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2010, place_id = 1, maxresults = 5000, quality = "research")
-#cb2010 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2010, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2010 <- rbind(rb2010, cb2010)
-
-#rb2011 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2011, place_id = 1, maxresults = 5000, quality = "research")
-#cb2011 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2011, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2011 <- rbind(rb2011, cb2011)
-
-#rb2012 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2012, place_id = 1, maxresults = 5000, quality = "research")
-#cb2012 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2012, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2012 <- rbind(rb2012, cb2012)
-
-#rb2013 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2013, place_id = 1, maxresults = 5000, quality = "research")
-#cb2013 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2013, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2013 <- rbind(rb2013, cb2013)
-
-#rb2014 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2014, place_id = 1, maxresults = 5000, quality = "research")
-#cb2014 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2014, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2014 <- rbind(rb2014, cb2014)
-
-#rb2015 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2015, place_id = 1, maxresults = 5000, quality = "research")
-#cb2015 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2015, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2015 <- rbind(rb2015, cb2015)
-
-#rb2016 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2016, place_id = 1, maxresults = 5000, quality = "research")
-#cb2016 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2016, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2016 <- rbind(rb2016, cb2016)
-
-#rb2017 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2017, place_id = 1, maxresults = 5000, quality = "research")
-#cb2017 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2017, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2017 <- rbind(rb2017, cb2017)
-
-#rb2018 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2018, place_id = 1, maxresults = 5000, quality = "research")
-#cb2018 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2018, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2018 <- rbind(rb2018, cb2018)
-
-#rb2019 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2019, place_id = 1, maxresults = 5000, quality = "research")
-#cb2019 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2019, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2019 <- rbind(rb2019, cb2019)
-
-#rb2020 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2020, place_id = 1, maxresults = 5000, quality = "research")
-#cb2020 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2020, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2020 <- rbind(rb2020, cb2020)
-
-#rb2021 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2021, place_id = 1, maxresults = 5000, quality = "research")
-#cb2021 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2021, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2021 <- rbind(rb2021, cb2021)
-
-#rb2022 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2022, place_id = 1, maxresults = 5000, quality = "research")
-#cb2022 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2022, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2022 <- rbind(rb2022, cb2022)
-
-#rb2023 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2023, place_id = 1, maxresults = 5000, quality = "research")
-#cb2023 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2023, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2023 <- rbind(rb2023, cb2023)
-
-#rb2024 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2024, place_id = 1, maxresults = 5000, quality = "research")
-#cb2024 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2024, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2024 <- rbind(rb2024, cb2024)
-
-#rb2025 <- get_inat_obs(taxon_name = "Aesculus pavia", year = 2025, place_id = 1, maxresults = 5000, quality = "research")
-#cb2025 <- get_inat_obs(taxon_name = "Aquilegia canadensis", year = 2025, place_id = 1, maxresults = 5000, quality = "research")
-
-#fl_2025 <- rbind(rb2025, cb2025)
+fl_all <- do.call(rbind, fl_list)
 
 ```
 
@@ -180,7 +92,6 @@ library(ggplot2) # Plotting trends
 
 ```{r, message=FALSE, warning=FALSE}
 
-#fl_all <- rbind(fl_2005, fl_2006, fl_2007, fl_2008, fl_2009, fl_2010, fl_2011, fl_2012, fl_2013, fl_2014, fl_2015, fl_2016, fl_2017, fl_2018, fl_2019, fl_2020, fl_2021, fl_2022, fl_2023, fl_2024, fl_2025)
 
 #write.csv(fl_all, "data/fl_all.csv")
 
