@@ -44,6 +44,7 @@ library(leaflet.providers)
 library(leaflet.extras)
 library(rinat)
 library(rnpn)
+library(sf)
 library(rvest) # Used to download data from Journey North
 library(dplyr) # Mutating and filtering data
 library(lubridate) # Parsing date data
@@ -167,6 +168,9 @@ npn_flower <- read.csv("data/npn_flower.csv")
 ```{r}
 
 all_flower <- nat_flower %>% full_join(npn_flower)
+all_flower <- all_flower[!duplicated(as.list(all_flower))]
+all_flower <- all_flower %>%
+  distinct()
 
 ```
 
@@ -331,7 +335,7 @@ write.csv(rth_nat, "data/rth_nat.csv")
 ```{r, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
-Ruby-Throated Hummingbird = 352 (Species ID)
+#Ruby-Throated Hummingbird = 352 (Species ID)
 
 npn_download_individual_phenometrics(
  request_source='Aubrey Monaco', 
@@ -444,16 +448,19 @@ rth_most <- rth_some %>% full_join(rth_more)
 
 all_rth <- rth_most %>% full_join(npn_rth)
 
+all_rth <- all_rth[!duplicated(as.list(all_rth))]
+all_rth <- all_rth %>%
+  distinct()
+
 ```
 
 - Parsing, mutating, and filtering Ruby-throat data based on their migration timeframe of February to May [9]
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
- 
+
 all_rth <- all_rth %>%
-  mutate(Date = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
-  mutate(year_new = year(Date)) %>%
+  mutate(Date = parse_date_time(Date, orders = c("mdy", "ymd", "dmy"))) %>%
   mutate(year_day = yday(Date))
 
 rth_early <- all_rth %>%
@@ -505,10 +512,10 @@ rth_new <- all_rth %>%
   filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
   mutate(mean0013 = 
   case_when(Latitude > 30 & Latitude < 33 ~ 77,
-            Latitude > 33 & Latitude < 36 ~ 109.2778,
+            Latitude > 33 & Latitude < 36 ~ 110.6667,
             Latitude > 36 & Latitude < 39 ~ 112.6667,
-            Latitude > 39 & Latitude < 42 ~ 135.087,
-            Latitude > 42 & Latitude < 45 ~ 141.75
+            Latitude > 39 & Latitude < 42 ~ 137.125,
+            Latitude > 42 & Latitude < 45 ~ 141
                               ))                          
 rth_30 <- rth_new %>%
   filter(Month %in% c(2,3)) %>%
@@ -580,7 +587,7 @@ Dates for each latitude band:
 
 -   30-33: March 31st (About 8 days later)
 
--   33-36: April 12th (About 1 days earlier)
+-   33-36: April 12th (About 1 day earlier)
 
 -   36-39: April 26th (About 4 days earlier)
 
@@ -610,13 +617,13 @@ leaflet(rth_new_all) %>%
 
 Dates for each latitude band:
 
--   30-33: March 15th (About 2 days later)
+-   30-33: March 14th (About 4 days earlier)
 
--   33-36: April 12th (About 7 days earlier)
+-   33-36: April 10th (About 11 days earlier)
 
--   36-39: April 19th (About 4 days earlier)
+-   36-39: April 21st (About 2 days earlier)
 
--   39-42: May 13th (About 2 days earlier)
+-   39-42: May 13th (About 4 days earlier)
 
 -   42-45: May 17th (About 4 days earlier)
 
@@ -657,7 +664,7 @@ leaflet(all_flower)%>%
 
 # Conclusions
 
-Trends for Red Columbine and Red Buckeye show that the timing of first observations have changed from the 2005-2013 average. At the highest latitudes, there is a pattern of earlier sightings each year. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
+Trends for Red Columbine and Red Buckeye show that the timing of first observations have somewhat changed from the 2005-2013 average. At the highest latitudes, there is not much change in flowering times. But for latitudes between 30 and 36, flowers have been sighted both earlier and later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
 
 Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes.
 
