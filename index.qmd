@@ -71,6 +71,8 @@ registerDoParallel(num_cores)
 
 #Data for both species 2005 to 2018
 
+#Have to come back and specify common name
+
 nat_0518 <- foreach(s = c("Aesculus pavia", "Aquilegia canadensis"), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %:% foreach(a = c(2005:2018), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %dopar% { 
 print(paste("Downloading data for year:", a))
 Sys.sleep(30)
@@ -192,18 +194,30 @@ fl_early <- all_flower %>%
   filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & month %in% c(3, 4, 5))
 
 fl_early_30 <- fl_early %>%
-  filter(latitude > 30 & latitude < 36) %>%
+  filter(latitude > 30 & latitude < 33) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE))
+
+fl_early_33 <- fl_early %>%
+  filter(latitude > 33 & latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early_36 <- fl_early %>%
-  filter(latitude > 36 & latitude < 42) %>%
+  filter(latitude > 36 & latitude < 39) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE))
+
+fl_early_39 <- fl_early %>%
+  filter(latitude > 39 & latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 fl_early_42 <- fl_early %>%
-  filter(latitude > 42 & latitude < 48) %>%
+  filter(latitude > 42 & latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
-fl_early_all <- rbind(fl_early_30, fl_early_36, fl_early_42)
+fl_early_45 <- fl_early %>%
+  filter(latitude > 45 & latitude < 48) %>%
+  mutate(mean = mean(year_day, na.rm = TRUE))
+
+fl_early_all <- rbind(fl_early_30, fl_early_33, fl_early_36, fl_early_39, fl_early_42, fl_early_45)
 
 #Checked each dataset for the mean bloom date
 
@@ -221,12 +235,12 @@ fl_new <- all_flower %>%
   filter(year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5)) %>%
   mutate(mean0013 = 
          case_when(
-         latitude > 30 & latitude < 33 ~ 91.5931,
-         latitude > 33 & latitude < 36 ~ 91.5931,
-         latitude > 36 & latitude < 39 ~ 123.9448,
-         latitude > 39 & latitude < 42 ~ 123.9448,
-         latitude > 42 & latitude < 45 ~ 133.5402,
-         latitude > 45 & latitude < 48 ~ 133.5402))
+         latitude > 30 & latitude < 33 ~ 82.06329,
+         latitude > 33 & latitude < 36 ~ 103,
+         latitude > 36 & latitude < 39 ~ 120.5417,
+         latitude > 39 & latitude < 42 ~ 125.6289,
+         latitude > 42 & latitude < 45 ~ 132.7564,
+         latitude > 45 & latitude < 48 ~ 140.3333))
 
 fl_30 <- fl_new %>%
   filter(latitude > 30 & latitude < 33) %>%
@@ -278,37 +292,23 @@ Or:
 
 Download the Ruby-throated Hummingbird data from eBird by visiting: <https://media.ebird.org/catalog?birdOnly=true&taxonCode=rthhum>, filter by year (I did this in two separate actions \[1995-2021 and 2022-2025\] to ensure I could download all of the data), filter by location (United States), and download as a csv.
 
-- iNaturalist data download example:
+- iNaturalist data download:
 
 ```{r, message=FALSE, warning=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
-#Ruby-throat data 2005-2015
+#Ruby-throat data 2005-2019
 
-rth_0515 <- foreach(e = c(2005:2015), .packages = c("dplyr", "rinat"), .combine = bind_rows) %dopar% {
+rth_0519 <- foreach(e = c(2005:2019), .packages = c("dplyr", "rinat"), .combine = bind_rows) %dopar% {
 print(paste("Downloading data for year:", e))
-Sys.sleep(30)
+Sys.sleep(45)
 get_inat_obs(taxon_name = "Archilochus colubris", year = e, place_id = 1, maxresults = 10000, quality = "research") 
 }
 
-#Ruby-throat data 2016-2019
+#Ruby-throat data 2020-2025
 
-rth_1619 <- foreach(f = c(2016:2019), .packages = c("dplyr", "rinat"), .combine = bind_rows) %dopar% {
-print(paste("Downloading data for year:", f))
-Sys.sleep(30)
-get_inat_obs(taxon_name = "Archilochus colubris", year = f, place_id = 1, maxresults = 10000, quality = "research") 
-}
-
-#Ruby-throat data 2020, 2021
-
-rth_2021 <- foreach(g = c(2020,2021), .packages = c("dplyr", "rinat"), .combine = bind_rows) %dopar% {
-print(paste("Downloading data for year:", g))
-Sys.sleep(30)
-get_inat_obs(taxon_name = "Archilochus colubris", year = g, place_id = 1, maxresults = 10000, quality = "research") 
-}
-
-#Ruby-throat data 2022-2025
-
+rth_20 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2020, place_id = 1, maxresults = 10000, quality = "research")
+rth_21 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2021, place_id = 1, maxresults = 10000, quality = "research")
 rth_22 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2022, place_id = 1, maxresults = 10000, quality = "research") 
 rth_23 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2023, place_id = 1, maxresults = 10000, quality = "research") 
 rth_24 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2024, place_id = 1, maxresults = 10000, quality = "research") 
@@ -316,28 +316,32 @@ rth_25 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2025, place_i
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 
 #Combined all iNat data into one data set for Ruby-Throats
 
-rth_nat <- rbind(rth_0515, rth_1619, rth_2021, rth_22, rth_23, rth_24, rth_25)
+rth_nat <- rbind(rth_0519, rth_20, rth_21, rth_22, rth_23, rth_24, rth_25)
 
-#write.csv(rth_nat, "data/rth_nat.csv")
+write.csv(rth_nat, "data/rth_nat.csv")
 
 ```
 
-- NPN data download example:
+- NPN data download:
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
-#NPN data download (Ruby-Throated Hummingbird = 352 (Species ID))
+Ruby-Throated Hummingbird = 352 (Species ID)
 
-#npn_download_individual_phenometrics(
-# request_source='Aubrey Monaco', 
-# years=c(2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023, 2024, 2025), 
-# species_id=c(352), 
-# download_path="data/npn_rth.csv")
+npn_download_individual_phenometrics(
+ request_source='Aubrey Monaco', 
+ years=c(2005, 2006, 2007, 2008, 2009, 2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023, 2024, 2025), 
+ species_id=c(352), 
+ download_path="data/npn_rth.csv")
+
+```
+
+```{r}
 
 #Renamed latitude column for easier manipulation
 npn_rth <- read.csv("data/npn_rth.csv")
@@ -346,158 +350,60 @@ npn_rth <- npn_rth %>%
 
 ```
 
+Journey North Data Download:
+
 ```{r, collapse=TRUE, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
-jn0515 <- foreach(urls = c(jn_05, jn_06, jn_07, jn_08, jn_09, jn_10, jn_11, jn_12, jn_13, jn_14, jn_15), .packages = c("dplyr", "rvest"), .combine = bind_rows) %dopar% {
+jn_05 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2005&submit=View+Data"
+
+jn_06 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2006&submit=View+Data"
+
+jn_07 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2007&submit=View+Data"
+
+jn_08 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2008&submit=View+Data"
+
+jn_09 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2009&submit=View+Data"
+
+jn_10 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2010&submit=View+Data"
+
+jn_11 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2011&submit=View+Data"
+
+jn_12 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2005&submit=View+Data"
+
+jn_13 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2013&submit=View+Data"
+
+jn_14 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2014&submit=View+Data"
+
+jn_15 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2015&submit=View+Data"
+
+jn_16 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2016&submit=View+Data"
+
+jn_17 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2017&submit=View+Data"
+
+jn_18 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2018&submit=View+Data"
+
+jn_19 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2019&submit=View+Data"
+
+jn_20 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2020&submit=View+Data"
+
+jn_21 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2021&submit=View+Data"
+
+jn_22 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2022&submit=View+Data"
+
+jn_23 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2023&submit=View+Data"
+
+jn_24 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2024&submit=View+Data"
+
+jn_25 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2025&submit=View+Data"
+
+jn_table <- foreach(urls = c(jn_05, jn_06, jn_07, jn_08, jn_09, jn_10, jn_11, jn_12, jn_13, jn_14, jn_15, jn_16, jn_17, jn_18, jn_19, jn_20, jn_21, jn_22, jn_23, jn_24, jn_25), .packages = c("dplyr", "rvest"), .combine = bind_rows) %dopar% {
 Sys.sleep(30)
 read_html(urls) %>%
 html_elements("table") %>%
 html_table() %>%
 as.data.frame()
 }
-
-jn_06 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2006&submit=View+Data"
-#jn06 <- read_html(jn_06)
-#jn06 <- jn06 %>%
- # html_elements("table") %>%
- # html_table()
-#jn06 <- as.data.frame(jn06)
-
-jn_07 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2007&submit=View+Data"
-#jn07 <- read_html(jn_07)
-#jn07 <- jn07 %>%
- # html_elements("table") %>%
- # html_table()
-#jn07 <- as.data.frame(jn07)
-
-jn_08 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2008&submit=View+Data"
-#jn08 <- read_html(jn_08)
-#jn08 <- jn08 %>%
- # html_elements("table") %>%
- # html_table()
-#jn08 <- as.data.frame(jn08)
-
-jn_09 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2009&submit=View+Data"
-#jn09 <- read_html(jn_09)
-#jn09 <- jn09 %>%
- # html_elements("table") %>%
- #  html_table()
-#jn09 <- as.data.frame(jn09)
-
-jn_10 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2010&submit=View+Data"
-#jn10 <- read_html(jn_10)
-#jn10 <- jn10 %>%
- # html_elements("table") %>%
- #  html_table()
-#jn10 <- as.data.frame(jn10)
-
-jn_11 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2011&submit=View+Data"
-#jn11 <- read_html(jn_11)
-#jn11 <- jn11 %>%
- # html_elements("table") %>%
- #  html_table()
-#jn11 <- as.data.frame(jn11)
-
-jn_12 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2005&submit=View+Data"
-#jn12 <- read_html(jn_12)
-#jn12 <- jn12 %>%
- # html_elements("table") %>%
- # html_table()
-#jn12 <- as.data.frame(jn12)
-
-jn_13 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2013&submit=View+Data"
-#jn13 <- read_html(jn_13)
-#jn13 <- jn13 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn13 <- as.data.frame(jn13)
-
-jn_14 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2014&submit=View+Data"
-#jn14 <- read_html(jn_14)
-#jn14 <- jn14 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn14 <- as.data.frame(jn14)
-
-jn_15 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2015&submit=View+Data"
-#jn15 <- read_html(jn_15)
-#jn15 <- jn15 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn15 <- as.data.frame(jn15)
-
-jn_16 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2016&submit=View+Data"
-#jn16 <- read_html(jn_16)
-#jn16 <- jn16 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn16 <- as.data.frame(jn16)
-
-jn_17 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2017&submit=View+Data"
-#jn17 <- read_html(jn_17)
-#jn17 <- jn17 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn17 <- as.data.frame(jn17)
-
-jn_18 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2018&submit=View+Data"
-#jn18 <- read_html(jn_18)
-#jn18 <- jn18 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn18 <- as.data.frame(jn18)
-
-jn_19 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2019&submit=View+Data"
-#jn19 <- read_html(jn_19)
-#jn19 <- jn19 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn19 <- as.data.frame(jn19)
-
-jn_20 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2020&submit=View+Data"
-#jn20 <- read_html(jn_20)
-#jn20 <- jn20 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn20 <- as.data.frame(jn20)
-
-jn_21 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2021&submit=View+Data"
-#jn21 <- read_html(jn_21)
-#jn21 <- jn21 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn21 <- as.data.frame(jn21)
-
-jn_22 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2022&submit=View+Data"
-#jn22 <- read_html(jn_22)
-#jn22 <- jn22 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn22 <- as.data.frame(jn22)
-
-jn_23 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2023&submit=View+Data"
-#jn23 <- read_html(jn_23)
-#jn23 <- jn23 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn23 <- as.data.frame(jn23)
-
-jn_24 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2024&submit=View+Data"
-#jn24 <- read_html(jn_24)
-#jn24 <- jn24 %>%
-#  html_elements("table") %>%
-#  html_table()
-#jn24 <- as.data.frame(jn24)
-
-jn_25 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2025&submit=View+Data"
-#jn25 <- read_html(jn_25)
-#jn25 <- jn25 %>%
- # html_elements("table") %>%
- # html_table()
-#jn25 <- as.data.frame(jn25)
-
-#jn_table <- rbind(jn05, jn06, jn07, jn08, jn09, jn10, jn11, jn12, jn13, jn14, jn15, jn16, jn17, jn18, jn19, jn20, jn21, jn22, jn23, jn24, jn25)
 
 ```
 
@@ -519,12 +425,22 @@ rth_ebird <- rth_0513 %>% full_join(rth_1425)
 rth_inat <- read.csv("data/rth_nat.csv")
 rth_inat <- rth_inat %>%
   rename(Latitude = latitude, Longitude = longitude) %>% # Renaming for joining
+  mutate(Latitude = as.numeric(Latitude)) %>%
+  mutate(Longitude = as.numeric(Longitude)) %>%
   filter(captive_cultivated == "false" & quality_grade == "research") # Filtered to ensure I had verified data and wild sightings
 
-rth_some <- rth_ebird %>% full_join(rth_inat, relationship = "many-to-many")
+rth_ebird <- rth_ebird %>%
+  mutate(Latitude = as.numeric(Latitude)) %>%
+  mutate(Longitude = as.numeric(Longitude))
+
+rth_some <- rth_ebird %>% full_join(rth_inat)
+
+jn_table <- jn_table %>%
+  mutate(X = as.character(X))
+
 rth_more <- rth_some %>% full_join(jn_table)
 
-rth_most <- rth_some %>% full_join(rth_more, relationship = "many-to-many")
+rth_most <- rth_some %>% full_join(rth_more)
 
 all_rth <- rth_most %>% full_join(npn_rth)
 
@@ -536,9 +452,9 @@ all_rth <- rth_most %>% full_join(npn_rth)
 #| code-fold: TRUE
  
 all_rth <- all_rth %>%
-  mutate(date_new = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
-  mutate(year_new = year(date_new)) %>%
-  mutate(year_day = yday(date_new))
+  mutate(Date = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
+  mutate(year_new = year(Date)) %>%
+  mutate(year_day = yday(Date))
 
 rth_early <- all_rth %>%
   filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & Month %in% c(2,3,4,5))
@@ -576,11 +492,7 @@ rthearly42 <- rth_early %>%
   filter(Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
-rthearly1 <- rthearly30 %>% full_join(rthearly33)
-rthearly2 <- rthearly36 %>% full_join(rthearly39)
-rthearly3 <- rthearly1 %>% full_join(rthearly42)
-
-rth_early_all <- rthearly2 %>% full_join(rthearly3)
+rth_early_all <- rbind(rthearly30, rthearly33, rthearly36, rthearly39, rthearly42)
 
 ```
 
@@ -628,11 +540,7 @@ rth_42 <- rth_new %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
   mutate(difference = mean - mean0013)
 
-rth_1 <- rth_30 %>% full_join(rth_33)
-rth_2 <- rth_36 %>% full_join(rth_39)
-rth_3 <- rth_42 %>% full_join(rth_1)
-
-rth_new_all <- rth_2 %>% full_join(rth_3)
+rth_new_all <- rbind(rth_30, rth_33, rth_36, rth_39, rth_42)
 
 ```
 
