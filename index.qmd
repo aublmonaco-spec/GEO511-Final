@@ -131,6 +131,10 @@ fl_all <- rbind(nat_0518, buck_1920, buck_2122, buck_2324, col_1920, col_21, col
 
 write.csv(fl_all, "data/fl_all.csv")
 
+```
+
+```{r}
+
 nat_flower <- read.csv("data/fl_all.csv")
 
 ```
@@ -347,7 +351,7 @@ jn_05 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hu
 
 ```
 
-```{r, collapse=TRUE, warning=FALSE, message=FALSE}
+```{r, collapse=TRUE, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
 jn0515 <- foreach(urls = c(jn_05, jn_06, jn_07, jn_08, jn_09, jn_10, jn_11, jn_12, jn_13, jn_14, jn_15), .packages = c("dplyr", "rvest"), .combine = bind_rows) %dopar% {
