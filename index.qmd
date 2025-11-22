@@ -152,6 +152,10 @@ npn_download_individual_phenometrics(
  download_path="data/npn_flower.csv"
  )
 
+```
+
+```{r}
+
 npn_flower <- read.csv("data/npn_flower.csv")
 
 ```
@@ -310,6 +314,10 @@ rth_23 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2023, place_i
 rth_24 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2024, place_id = 1, maxresults = 10000, quality = "research") 
 rth_25 <- get_inat_obs(taxon_name = "Archilochus colubris", year = 2025, place_id = 1, maxresults = 10000, quality = "research") 
 
+```
+
+```{r}
+
 #Combined all iNat data into one data set for Ruby-Throats
 
 rth_nat <- rbind(rth_0515, rth_1619, rth_2021, rth_22, rth_23, rth_24, rth_25)
@@ -335,19 +343,6 @@ rth_nat <- rbind(rth_0515, rth_1619, rth_2021, rth_22, rth_23, rth_24, rth_25)
 npn_rth <- read.csv("data/npn_rth.csv")
 npn_rth <- npn_rth %>%
   rename(Latitude = latitude, Longitude = longitude)
-
-```
-
-- Journey North data download example:
-
-```{r}
-
-jn_05 <- "https://journeynorth.org/sightings/querylist.html?season=spring&map=hummingbird-ruby-throated-first&year=2005&submit=View+Data"
-#jn05 <- read_html(jn_05)
-#jn05 <- jn05 %>%
- # html_elements("table") %>%
- # html_table()
-#jn05 <- as.data.frame(jn05)
 
 ```
 
