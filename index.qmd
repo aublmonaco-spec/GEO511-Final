@@ -181,6 +181,7 @@ all_flower <- all_flower %>%
 ```{r, message=FALSE, warning=FALSE}
 
 all_flower <- all_flower %>%
+  mutate(observed_on = parse_date_time(observed_on, orders = c("mdy", "ydm", "dmy"))) %>%
   mutate(year = year(observed_on)) %>% # Pulls year from date
   mutate(year_day = yday(observed_on)) %>% # Puts date into day out of 365
   mutate(month = month(observed_on)) # Pulls month from date
@@ -197,33 +198,14 @@ all_flower <- all_flower %>%
 fl_early <- all_flower %>%
   filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & month %in% c(3, 4, 5))
 
-fl_early_30 <- fl_early %>%
-  filter(latitude > 30 & latitude < 33) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
+fl_early_all <- fl_early %>%
+  mutate(latbin=cut(latitude, c(30,36,42,48))) %>%
+  group_by(latbin) %>%
+  mutate(mean = mean(year_day, na.rm=TRUE))
 
-fl_early_33 <- fl_early %>%
-  filter(latitude > 33 & latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_36 <- fl_early %>%
-  filter(latitude > 36 & latitude < 39) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_39 <- fl_early %>%
-  filter(latitude > 39 & latitude < 42) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_42 <- fl_early %>%
-  filter(latitude > 42 & latitude < 45) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_45 <- fl_early %>%
-  filter(latitude > 45 & latitude < 48) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-fl_early_all <- rbind(fl_early_30, fl_early_33, fl_early_36, fl_early_39, fl_early_42, fl_early_45)
-
-#Checked each dataset for the mean bloom date
+fl_means <- fl_early_all %>%
+  group_by(latbin) %>%
+  summarise(mean)
 
 ```
 
@@ -239,44 +221,18 @@ fl_new <- all_flower %>%
   filter(year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5)) %>%
   mutate(mean0013 = 
          case_when(
-         latitude > 30 & latitude < 33 ~ 82.06329,
-         latitude > 33 & latitude < 36 ~ 103,
-         latitude > 36 & latitude < 39 ~ 120.5417,
-         latitude > 39 & latitude < 42 ~ 125.6289,
-         latitude > 42 & latitude < 45 ~ 132.7564,
-         latitude > 45 & latitude < 48 ~ 140.3333))
+         latitude > 30 & latitude < 33 ~ 81.95652,
+         latitude > 33 & latitude < 36 ~ 81.95652,
+         latitude > 36 & latitude < 39 ~ 99.73333,
+         latitude > 39 & latitude < 42 ~ 99.73333,
+         latitude > 42 & latitude < 45 ~ 114.30769,
+         latitude > 45 & latitude < 48 ~ 114.30769))
 
-fl_30 <- fl_new %>%
-  filter(latitude > 30 & latitude < 33) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_33 <- fl_new %>%
-  filter(latitude > 33 & latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_36 <- fl_new %>%
-  filter(latitude > 36 & latitude < 39) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_39 <- fl_new %>%
-  filter(latitude > 39 & latitude < 42) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_42 <- fl_new %>%
-  filter(latitude > 42 & latitude < 45) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_45 <- fl_new %>%
-  filter(latitude > 45 & latitude < 48) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
-
-fl_new_all <- rbind(fl_30, fl_33, fl_36, fl_39, fl_42, fl_45)
+fl_new_all <- fl_new %>%
+  mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48))) %>%
+  group_by(latbin) %>%
+  mutate(mean = mean(year_day, na.rm=TRUE)) %>%
+  mutate(difference = mean-mean0013)
 
 ```
 
@@ -500,6 +456,7 @@ rthearly42 <- rth_early %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rth_early_all <- rbind(rthearly30, rthearly33, rthearly36, rthearly39, rthearly42)
+
 
 ```
 
