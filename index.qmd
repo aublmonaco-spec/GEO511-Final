@@ -10,25 +10,33 @@ editor_options:
 
 # Introduction
 
-With warming temperatures due to anthropogenic climate change, migrating birds are tending to move back to their breeding grounds earlier each year [1]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be changing the time of their first bloom due to climate change [2].
+With warming temperatures due to anthropogenic climate change, migrating birds are starting to move back to their breeding grounds earlier each year [1]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be changing their flowering times due to climate change [2].
 
 ![[Ruby-throated Hummingbird [3]]{style="color:darkblue;"}](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns, and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10* years [4].
+I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10* years at varying latitudes [4].
 
 *My maps and graphs are from 2014 to 2025 to account for any incomplete datasets from 2025
+
+::: {layout-ncol=2}
 
 ![[Red Columbine [5]]{style="color:darkred;"}](data/cb_1.jpg){fig-align="center" width="200"}
 
 ![[Red Buckeye [6]]{style="color:darkred;"}](data/rb_1.jpg){fig-align="center" width="226"}
 
+:::
+
 I predict that Ruby-throated Hummingbirds are migrating back to their breeding grounds earlier each year, and that they are arriving at higher latitudes increasingly earlier than lower latitudes. Additionally, I suppose that the first sightings of these preferred flowers will be earlier at higher latitudes and later at lower latitudes compared to previous years. So, as Ruby-throated Hummingbirds migrate back earlier, these flowers may not be available at lower latitudes for them to feed on.
 
-# Materials and methods
+# Materials and Methods
 
-## 1. Install Packages and Load Libraries
+:::{.panel-tabset}
+
+## 1. 
+### Install Packages and Load Libraries
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 #install.packages("leaflet") # Dynamic maps
 #install.packages("leaflet.providers") # Different Basemaps
@@ -45,7 +53,6 @@ library(leaflet.extras)
 library(rinat)
 library(rnpn)
 library(knitr) # Making tables
-library(kableExtra)
 library(rvest) # Used to download data from Journey North
 library(dplyr) # Mutating and filtering data
 library(lubridate) # Parsing date data
@@ -54,7 +61,8 @@ library(ggplot2)# Plotting trends
 
 ```
 
-## 2. Flowers: Load iNaturalist and US NPN Data.
+## 2. 
+### Flowers: Load iNaturalist and US NPN Data.
 
 - foreach, doParallel, and rinat package iNaturalist data download: 
 
@@ -89,6 +97,7 @@ get_inat_obs(taxon_name = s, year = a, place_id = 1, maxresults = 10000, quality
 - Individual datasets combined and written csv is loaded into environment as "nat_flower"
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 #fl_all <- rbind(nat_0519, nat_2025)
 
@@ -103,6 +112,7 @@ nat_flower <- nat_flower %>%
 - rnpn package for NPN data download (automatically saves as a csv): 
 
 ```{r, message=FALSE, warning=FALSE, eval=FALSE}
+#| code-fold: TRUE
 
 # Species IDs are available through the NPN's website (Red Buckeye = 784, Red Columbine = 147)
 
@@ -115,17 +125,21 @@ npn_download_individual_phenometrics(
 
 ```
 
+- NPN data loaded into environment
+
 ```{r}
+#| code-fold: TRUE
 
 npn_flower <- read.csv("data/npn_flower.csv")
 
 ```
 
-## 3.  Flowers: Combine the iNaturalist and NPN Data
+## 3.  
+### Flowers: Combine the iNaturalist and NPN Data
 
-```{r}
+```{r, message=FALSE}
 
-# iNaturalist and NPN data are joined and duplicate observations are removed
+# iNaturalist and NPN data are joined and duplicate observations are removed, leaving about 52,000 data points
 
 all_flower <- nat_flower %>% full_join(npn_flower)
 all_flower <- all_flower[!duplicated(as.list(all_flower))]
@@ -134,7 +148,8 @@ all_flower <- all_flower %>%
 
 ```
 
-## 4. Flowers: Standardize and Mutate Data
+## 4. 
+### Flowers: Standardize and Mutate Data
 
 ```{r, message=FALSE, warning=FALSE}
 
@@ -148,12 +163,14 @@ all_flower <- all_flower %>%
  
 ```
 
-## 5. Flowers: Calculate Means of Early Period (2005-2013)
+## 5. 
+### Flowers: Calculate Means of Early Period (2005-2013)
 
-- Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [7,8]
-- Separated sightings into 3 bands of latitude to account for difference in average flowering times in across their range (grouped latitudes had similar "year_day" averages)
+- Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [7, 8]
+- Separated sightings into 3 bands of latitude to account for difference in average flowering times across their range (grouped by latitudes with similar "year_day" averages)
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 fl_early <- all_flower %>%
   filter(year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & month %in% c(3, 4, 5))
@@ -168,20 +185,24 @@ fl_means <- fl_early_all %>%
   summarise(mean) %>%
   rename("Latitude" = "latbin", "Flowering Day Mean" = "mean")
 
+#One row for each latitude band mean selected
 selected_fl <- fl_means[c(1, 25, 39), ]
 
-kable(selected_fl, format = "pipe", caption = '<span style="color: darkred;">2005-2013 Flowering Time Means</span>')
+#Table to show early period flowering times based on latitude bands
+kable(selected_fl, format = "pipe", caption = '<span style="color: darkred;">2005-2013 Flowering Time Means (days)</span>')
 
 ```
 
-## 6. Flowers: Calculate Means and Difference From 2014-2025 to 2005-2013
+## 6. 
+### Flowers: Calculate Means and Difference From 2014-2025 to 2005-2013
 
-- Added a column (mean0013) based on table of flowering means by latitude
+- Added a column (mean0513) based on "2005-2013 Flowering Time Means" table and assigned by corresponding latitudes
 - Used 6 bands of latitude for more specific analysis
-- Created a "difference" column, showing the difference in days of arrival between the early and current average using mean - mean0013
+- Created a "difference" column, showing the difference in days of arrival between the early and current average using mean - mean0513
 - Bound all of these bands into one dataset for plotting
 
 ```{r, message=FALSE, warning=FALSE}
+#| code-fold: TRUE
 
 fl_new <- all_flower %>%
   filter(year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5)) %>%
@@ -195,23 +216,24 @@ fl_new <- all_flower %>%
          latitude > 45 & latitude < 48 ~ 114.30769))
 
 fl_new_all <- fl_new %>%
-  mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48))) %>%
+  mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48), labels = c("30-33", "33-36", "36-39", "39-42","42-45", "45-48"))) %>%
   group_by(latbin) %>%
   mutate(mean = mean(year_day, na.rm=TRUE)) %>%
   mutate(difference = mean-mean0513) %>%
   drop_na(difference)
 
 fl_new_difference <- fl_new_all %>%
-  mutate(latbin=cut(latitude, breaks = c(30,33,36,39,42,45,48), labels = c("30-33", "33-36", "36-39", "39-42","42-45", "45-48"))) %>%
   group_by(difference) %>%
   select(latbin, difference) %>%
   rename("Latitude" = "latbin", "Difference in Ruby-throat Arrival Dates" = "difference") 
 
+#Selected 1 row for each latitude band difference
 fl_new_difference <- fl_new_difference[c(1, 895, 222, 1425, 2656, 4115), ]
   
 ```
 
-## 7. Repeat Process for Ruby-throated Hummingbirds
+## 7. 
+### Repeat Process for Ruby-throated Hummingbirds
 
 - Used data from eBird and Journey North in addition to iNaturalist and the US NPN.
 
@@ -251,6 +273,7 @@ get_inat_obs(taxon_name = "Archilochus colubris", year = e, place_id = 1, maxres
 ```
 
 ```{r, eval=FALSE}
+#| code-fold: TRUE
 
 #Combined all iNat data into one data set for Ruby-Throats
 
@@ -275,7 +298,10 @@ npn_download_individual_phenometrics(
 
 ```
 
+- NPN data loaded into environment:
+
 ```{r}
+#| code-fold: TRUE
 
 npn_rth <- read.csv("data/npn_rth.csv")
 
@@ -345,7 +371,8 @@ rth_ebird <- rth_ebird %>%
 rth_inat <- read.csv("data/rth_nat.csv")
 rth_inat <- rth_inat %>%
   mutate(latitude = as.numeric(latitude)) %>%
-  mutate(longitude = as.numeric(longitude))
+  mutate(longitude = as.numeric(longitude)) %>%
+  rename(Date = observed_on)
 
 #All data joined
 rth_some <- rth_ebird %>% full_join(rth_inat)
@@ -353,122 +380,89 @@ rth_more <- rth_some %>% full_join(jn_table)
 rth_most <- rth_some %>% full_join(rth_more)
 all_rth <- rth_most %>% full_join(npn_rth)
 
-#Removing duplicate rows and columns
+#Removing duplicate rows and columns, leaving about 126,000 data points
 all_rth <- all_rth[!duplicated(as.list(all_rth))]
 all_rth <- all_rth %>%
   distinct()
 
 ```
 
-- Parsing and mutating data
+- Parsing and mutating data:
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
 
 all_rth <- all_rth %>%
-  mutate(Date = parse_date_time(Date, orders = c("mdy", "ymd", "dmy"))) %>%
-  mutate(year_day = yday(Date))
+  mutate(Date = parse_date_time(Date, orders = c("mdy", "ydm", "dmy"))) %>%
+  mutate(year_day = yday(Date)) %>%
+  mutate(Month = month(Date)) %>%
+  mutate(Year = year(Date))
 
 ```
 
-- These filtering steps differ from the flower data filtering to account for Ruby-throat migration arrival times for varying latitudes between February to May based on Journey North and Courter et al., 2013
+- Filtering to account for Ruby-throat migration arrival times for varying latitudes between February to May based on Journey North and Courter et al., 2013
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
 
 rth_early <- all_rth %>%
-  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013))
-         
-rthearly30 <- rth_early %>%
-  filter(Month %in% c(2,3) & latitude > 29 & latitude < 33) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
+  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & Month %in% c(2,3,4,5))
 
-rthearly33 <- rth_early %>%
-  filter(Month %in% c(3,4) & latitude > 33 & latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE))
-
-rthearly36 <- rth_early %>%
-  filter(Month %in% c(3,4) & latitude > 36 & latitude < 39) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
-
-rthearly39 <- rth_early %>%
-  filter(Month %in% c(4,5) & latitude > 39 & latitude < 42) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
-
-rthearly42 <- rth_early %>%
-  filter(Month %in% c(4,5) & latitude > 42 & latitude < 45) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) 
-
-rth_early_all <- rbind(rthearly30, rthearly33, rthearly36, rthearly39, rthearly42)
+rth_early_all <- rth_early %>%
+  mutate(latbin=cut(latitude, breaks = c(30,33,36,39,42,45,48), labels = c("30-33","33-36", "36-39", "39-42", "42-45", "45-48"))) %>%
+  group_by(latbin) %>%
+  mutate(mean = mean(year_day, na.rm=TRUE))
 
 rth_means <- rth_early_all %>%
-  mutate(latbin=cut(latitude, breaks = c(29,33,36,39,42,45), labels = c("30-33", "33-36", "36-39", "39-42","42-45"))) %>%
   group_by(mean) %>%
   select(latbin, mean) %>%
-  rename("Latitude" = "latbin", "Ruby-throat Average Arrival Dates" = "mean")
+  rename("Latitude" = "latbin", "Ruby-throat Average Arrival Dates (days)" = "mean")
 
-selected_rth <- rth_means[c(1, 3, 6, 9, 17), ]
+#One row for each latitude band mean selected
+selected_rth <- rth_means[c(5, 15099, 6639, 7940, 7395, 7), ]
 
 kable(selected_rth, format = "pipe", caption = '<span style="color: darkblue;">2005-2013 Ruby-throat Arrival Means</span>')
 
 ```
 
+- "mean0513" column values taken from "Ruby-throat Arrival Means" table and assigned based on corresponding latitudes
 - 2014-2025 Ruby-throat dataset:
 
 ```{r, warning=FALSE, message=FALSE}
 #| code-fold: TRUE
 
-#"mean0513" taken from table of early means
-
 rth_new <- all_rth %>%
-  filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
+  filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2,3,4,5)) %>%
   mutate(mean0513 = 
-  case_when(latitude > 30 & latitude < 33 ~ 77,
-            latitude > 33 & latitude < 36 ~ 110.6667,
-            latitude > 36 & latitude < 39 ~ 112.6667,
-            latitude > 39 & latitude < 42 ~ 137.125,
-            latitude > 42 & latitude < 45 ~ 141
-                              ))                          
-rth_30 <- rth_new %>%
-  filter(Month %in% c(2,3) & latitude > 30 & latitude < 33) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0513)
+  case_when(latitude > 30 & latitude < 33 ~ 79.80628,
+            latitude > 33 & latitude < 36 ~ 93.53428,
+            latitude > 36 & latitude < 39 ~ 105.52074,
+            latitude > 39 & latitude < 42 ~ 117.30150,
+            latitude > 42 & latitude < 45 ~ 124.95684,
+            latitude > 45 & latitude < 48 ~ 129.7148                 ))                  
 
-rth_33 <- rth_new %>%
-  filter(Month %in% c(3,4) & latitude > 33 & latitude < 36) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0513)
-
-rth_36 <- rth_new %>%
-  filter(Month %in% c(3,4) & latitude > 36 & latitude < 39) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0513)
-
-rth_39 <- rth_new %>%
-  filter(Month %in% c(4,5) & latitude > 39 & latitude < 42) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0513)
-
-rth_42 <- rth_new %>%
-  filter(Month %in% c(4,5) & latitude > 42 & latitude < 45) %>%
-  mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0513)
-
-rth_new_all <- rbind(rth_30, rth_33, rth_36, rth_39, rth_42)
-
+rth_new_all <- rth_new %>%
+  mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48), labels = c("30-33", "33-36", "36-39", "39-42", "42-45", "45-48"))) %>%
+  group_by(latbin) %>%
+  mutate(mean = mean(year_day, na.rm=TRUE)) %>%
+  mutate(difference = mean-mean0513) %>%
+  drop_na(difference)
+  
 rth_new_difference <- rth_new_all %>%
-  mutate(latbin=cut(latitude, breaks = c(30,33,36,39,42,45), labels = c("30-33", "33-36", "36-39", "39-42","42-45"))) %>%
   group_by(difference) %>%
   select(latbin, difference) %>%
   rename("Latitude" = "latbin", "Difference in Ruby-throat Arrival Dates" = "difference")
 
-rth_new_difference <- rth_new_difference[c(1, 250, 400, 650, 1490), ]
+#One row for each latitude band difference selected
+rth_new_difference <- rth_new_difference[c(1, 14105, 13263, 8261, 24450, 92), ]
 
 ```
 
-## 8. Create Color Palettes
+## 8. 
+### Create Color Palettes
 
 ```{r}
+#| code-fold: TRUE
 
 #Mapping colors to "difference" columns
 
@@ -478,11 +472,61 @@ rpal <- colorNumeric(palette = "viridis", domain = rth_new_all$difference, na.co
  
 ```
 
+:::
+
 # Results
 
-### Trends in Flower Blooms (2014 - 2025)
+## Where Is This Data Coming From?
+### Observation Locations of Flowers and Ruby-throats
+
+:::: {.columns}
+
+::: {.column width="48%"}
+
+```{r, message=FALSE}
+#| code-fold: TRUE
+#| label: map-left
+
+leaflet(all_flower)%>%
+  addProviderTiles(provider = "Esri") %>%
+  setView(-85.7664, 38.2469, zoom = 4) %>%
+  addHeatmap()
+
+```
+Flower Observation Locations
+:::
+
+::: {.column width="4%"}
+
+:::
+
+::: {.column width="48%"}
 
 ```{r}
+#| code-fold: TRUE
+#| label: map-right
+
+all_rth_map <- all_rth %>%
+  filter(!is.na(latitude) & !is.na(longitude))
+
+leaflet(all_rth_map)%>%
+  addProviderTiles(provider = "Esri") %>%
+  setView(-85.7664, 38.2469, zoom = 4) %>%
+  addHeatmap(lng = ~longitude, lat = ~latitude)
+
+```
+Ruby-throat Observation Locations
+
+:::
+
+::::
+
+:::{.panel-tabset}
+
+### Trends in Flowering Times (2014 - 2025)
+
+```{r}
+#| code-fold: TRUE
 
 leaflet(fl_new_all) %>%
   addProviderTiles(providers$Esri.WorldStreetMap, group = "World Map") %>%
@@ -496,13 +540,25 @@ leaflet(fl_new_all) %>%
   addLegend(pal = cpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") %>%
   setView(-94.5786, 39.0997, zoom = 4)
 
-kable(fl_new_difference, format = "pipe", caption = '<span style="color: darkred;">2014-2025 Difference in Flowering Times</span>')
+```
+
+### Difference in Flowering Times (Days)
+
+```{r}
+#| code-fold: TRUE
+
+kable(fl_new_difference, format = "pipe", caption = '<span style="color: darkred;">2014-2025 Difference in Days</span>')
 
 ```
 
-### Trends in Ruby-Throated Hummingbird Sightings (2014 - 2025)
+:::
+
+::: {.panel-tabset}
+
+### Trends in Ruby-throat Sightings (2014 - 2025)
 
 ```{r}
+#| code-fold: TRUE
 
 leaflet(rth_new_all) %>%
   addProviderTiles(providers$Esri.WorldStreetMap, group = "World Map") %>%
@@ -516,15 +572,25 @@ leaflet(rth_new_all) %>%
   addLegend(pal = rpal, values = ~difference, title = "Difference From Early Average (days)", position = "bottomleft") %>%
   setView(-94.5786, 39.0997, zoom = 4)
 
-kable(rth_new_difference, format = "pipe", caption = '<span style="color: darkblue;">2014-2025 Difference in Ruby-throat Arrival Times</span>')
+```
+
+### Difference in Arrival Times (Days)
+
+```{r}
+#| code-fold: TRUE
+
+kable(rth_new_difference, format = "pipe", caption = '<span style="color: darkblue;">2014-2025 Difference in Days</span>')
 
 ```
 
-### Average Bloom/Arrival Times (2005-2013)
+:::
 
-```{r}
+## Average Flowering/Arrival Times (2005-2013)
 
-early_plot <- ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = fl_early_all, aes(x = mean, y = latitude, color = "Flowers"), method = "lm") + geom_point(data = rth_early_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = rth_early_all, aes(x = mean, y = latitude, color = "Ruby-throats"), method = "lm") + labs(title = "Average Bloom/Arrival Times (2005-2013)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"), legend.text = element_text(family = "serif", size = 10), axis.text = element_text(family = "serif", size = 10)) + scale_color_manual(name = "Legend", breaks = c("Mean", "Flowers", "Ruby-throats"), values = c("Mean" = "black", "Flowers" = "darkred", "Ruby-throats" = "darkblue"))
+```{r, message=FALSE}
+#| code-fold: TRUE
+
+early_plot <- ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = fl_early_all, aes(x = mean, y = latitude, color = "Flowers"), method = "lm") + geom_point(data = rth_early_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = rth_early_all, aes(x = mean, y = latitude, color = "Ruby-throats"), method = "lm") + labs(title = "Average Flowering/Arrival Times (2005-2013)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"), legend.text = element_text(family = "serif", size = 10), axis.text = element_text(family = "serif", size = 10)) + scale_color_manual(name = "Legend", breaks = c("Mean", "Flowers", "Ruby-throats"), values = c("Mean" = "black", "Flowers" = "darkred", "Ruby-throats" = "darkblue"))
 
 ggplotly(early_plot)
 
@@ -532,11 +598,12 @@ ggplotly(early_plot)
 
 Generally, Red Columbine and Red Buckeye flowering is spread over a large portion of Ruby-throat migration.
 
-### Average Bloom/Arrival Times (2014-2025)
+## Average Flowering/Arrival Times (2014-2025)
 
-```{r}
+```{r, message=FALSE}
+#| code-fold: TRUE
 
-late_plot <- ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude, color = "Flowers"), method = "lm") + geom_point(data = rth_new_all, aes(x = mean, y = latitude, color ="Mean"), size = 0.1) + geom_smooth(data = rth_new_all, aes(x = mean, y = latitude, color = "Ruby-throats"), method = "lm") + labs(title = "Average Bloom/Arrival Times (2014-2025)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"), legend.text = element_text(family = "serif", size = 10), axis.text = element_text(family = "serif", size = 10)) + scale_color_manual(name = "Legend", breaks = c("Mean", "Flowers", "Ruby-throats"), values = c("Mean" = "black", "Flowers" = "darkred", "Ruby-throats" = "darkblue"))
+late_plot <- ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude, color = "Mean"), size = 0.1) + geom_smooth(data = fl_new_all, aes(x = mean, y = latitude, color = "Flowers"), method = "lm") + geom_point(data = rth_new_all, aes(x = mean, y = latitude, color ="Mean"), size = 0.1) + geom_smooth(data = rth_new_all, aes(x = mean, y = latitude, color = "Ruby-throats"), method = "lm") + labs(title = "Average Flowering/Arrival Times (2014-2025)", x = "Mean Arrival/Flower Date (Year Days)", y = "Latitude") + theme(plot.title = element_text(family = "serif", size = 12), axis.title = element_text(family = "serif", size = 10), panel.background = element_blank(), panel.grid = element_line(color = "lightblue"), legend.text = element_text(family = "serif", size = 10), axis.text = element_text(family = "serif", size = 10)) + scale_color_manual(name = "Legend", breaks = c("Mean", "Flowers", "Ruby-throats"), values = c("Mean" = "black", "Flowers" = "darkred", "Ruby-throats" = "darkblue"))
 
 ggplotly(late_plot)
 
@@ -544,40 +611,17 @@ ggplotly(late_plot)
 
 Generally, Red Columbine and Red Buckeye flowering happens over a shorter time within Ruby-throat spring migration.
 
-### Observation Locations of Flowers
-
-```{r}
-
-leaflet(all_flower)%>%
-  addProviderTiles(provider = "Esri") %>%
-  setView(-85.7664, 38.2469, zoom = 4) %>%
-  addHeatmap()
-
-```
-
-### Observation Locations of Ruby-throats
-
-```{r}
-
-all_rth_map <- all_rth %>%
-  filter(!is.na(latitude) & !is.na(longitude))
-
-leaflet(all_rth_map)%>%
-  addProviderTiles(provider = "Esri") %>%
-  setView(-85.7664, 38.2469, zoom = 4) %>%
-  addHeatmap(lng = ~longitude, lat = ~latitude)
-
-```
-
 # Conclusions
 
-Trends for Red Columbine and Red Buckeye show that the timing of first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
+Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
 
 Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes.
 
-These trends do somewhat align, especially at higher latitudes. So, these food sources will be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
+These trends do somewhat align, especially at higher latitudes. So, Red Columbine and Red Buckeye will be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
 
-It is important to note that this dataset is relatively small, and data used to acquire average arrival/bloom dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data may be more biased towards urban areas, and its distribution is not even. As shown in the heatmap for the flowers, observations do tend to be concentrated in urban areas.
+It is important to note that this dataset is relatively small, and data used to acquire average arrival/bloom dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data distribution may not be even. As shown in the observation heatmaps, sightings do tend to be concentrated in urban areas.
+
+In the future, more data could be integrated into this code to create a better understanding of these trends. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but during breeding season, fall migration, and overwintering periods as well. Understanding trends like these can give insight into how climate change is affecting biodiversity and hopefully help motivate change and showcase why this biodiversity is important to protect.
 
 # References
 
@@ -597,7 +641,7 @@ It is important to note that this dataset is relatively small, and data used to 
 
 8. USDA Plants Database Plant Profile General. (n.d.). Retrieved November 19, 2025, from <https://plants.usda.gov/plant-profile/AEPA>
 
-9. Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds ( Archilochus colubris ) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
+9. Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds (*Archilochus colubris*) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
 
 10. Kudo, G., & Cooper, E. J. (2019). When spring ephemerals fail to meet pollinators: Mechanism of phenological mismatch and its impact on plant reproduction. Proceedings of the Royal Society B: Biological Sciences, 286(1904), 20190573. <https://doi.org/10.1098/rspb.2019.0573>
 
