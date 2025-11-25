@@ -105,7 +105,8 @@ get_inat_obs(taxon_name = s, year = a, place_id = 1, maxresults = 10000, quality
 
 nat_flower <- read.csv("data/fl_all.csv") 
 nat_flower <- nat_flower %>%
-  filter(common_name %in% c("red columbine", "Red Buckeye"))
+  filter(common_name %in% c("red columbine", "Red Buckeye")) %>%
+  mutate(year = year(observed_on))
 
 ```
 
@@ -130,7 +131,9 @@ npn_download_individual_phenometrics(
 ```{r}
 #| code-fold: TRUE
 
-npn_flower <- read.csv("data/npn_flower.csv")
+npn_flower <- read.csv("data/npn_flower.csv") 
+npn_flower <- npn_flower %>%
+  rename(year = first_yes_year)
 
 ```
 
@@ -157,7 +160,6 @@ all_flower <- all_flower %>%
 
 all_flower <- all_flower %>%
   mutate(observed_on = parse_date_time(observed_on, orders = c("mdy", "ydm", "dmy"))) %>% # Standardizes date formats
-  mutate(year = year(observed_on)) %>% # Pulls year from date
   mutate(year_day = yday(observed_on)) %>% # Puts date into day out of 365
   mutate(month = month(observed_on)) # Pulls month from date
  
@@ -304,6 +306,8 @@ npn_download_individual_phenometrics(
 #| code-fold: TRUE
 
 npn_rth <- read.csv("data/npn_rth.csv")
+  npn_rth <- npn_rth %>%
+  rename(Year = first_yes_year)
 
 ```
 
