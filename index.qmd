@@ -48,7 +48,8 @@ library(sf)
 library(rvest) # Used to download data from Journey North
 library(dplyr) # Mutating and filtering data
 library(lubridate) # Parsing date data
-library(ggplot2) # Plotting trends
+library(tidyr) # Cleaning data
+library(ggplot2)# Plotting trends
 
 ```
 
@@ -74,9 +75,9 @@ registerDoParallel(num_cores)
 
 #Data for both species 2005 to 2018
 
-nat_0518 <- foreach(s = c("Aesculus pavia", "Aquilegia canadensis"), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %:% foreach(a = c(2005:2018), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %do% { 
+nat_0518 <- foreach(s = c("Aesculus pavia", "Aquilegia canadensis"), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %:% foreach(a = c(2005:2018), .packages = c("dplyr", "rinat"), .errorhandling = "pass", .combine = bind_rows) %dopar% { 
 print(paste("Downloading data for year:", a))
-Sys.sleep(45)
+Sys.sleep(60)
 get_inat_obs(taxon_name = s, year = a, place_id = 1, maxresults = 10000, quality = "research", query = n) 
 }
 
@@ -205,8 +206,8 @@ fl_early <- all_flower %>%
 fl_early_all <- fl_early %>%
   mutate(latbin=cut(latitude, c(30,36,42,48))) %>%
   group_by(latbin) %>%
-  mutate(mean = mean(year_day, na.rm=TRUE))
-
+  mutate(mean = mean(year_day, na.rm=TRUE)) 
+  
 fl_means <- fl_early_all %>%
   group_by(latbin) %>%
   summarise(mean)
@@ -221,9 +222,12 @@ fl_means <- fl_early_all %>%
 - Binded all of these bands into one dataset for plotting
 
 ```{r, message=FALSE, warning=FALSE}
+
+#"mean0513" taken from early means of corresponding latitudes in fl_means
+
 fl_new <- all_flower %>%
   filter(year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & month %in% c(3, 4, 5)) %>%
-  mutate(mean0013 = 
+  mutate(mean0513 = 
          case_when(
          latitude > 30 & latitude < 33 ~ 81.95652,
          latitude > 33 & latitude < 36 ~ 81.95652,
@@ -236,7 +240,8 @@ fl_new_all <- fl_new %>%
   mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48))) %>%
   group_by(latbin) %>%
   mutate(mean = mean(year_day, na.rm=TRUE)) %>%
-  mutate(difference = mean-mean0013)
+  mutate(difference = mean-mean0513) %>%
+  drop_na(difference)
 
 ```
 
@@ -378,7 +383,7 @@ rth_inat <- rth_inat %>%
   rename(Latitude = latitude, Longitude = longitude) %>% # Renaming for joining
   mutate(Latitude = as.numeric(Latitude)) %>%
   mutate(Longitude = as.numeric(Longitude))
-
+  
 rth_ebird <- rth_ebird %>%
   mutate(Latitude = as.numeric(Latitude)) %>%
   mutate(Longitude = as.numeric(Longitude))
@@ -419,35 +424,29 @@ all_rth <- all_rth %>%
 #| code-fold: TRUE
 
 rth_early <- all_rth %>%
-  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013) & Month %in% c(2,3,4,5))
-
+  filter(Year %in% c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013))
+         
 rthearly30 <- rth_early %>%
-  filter(Month %in% c(2,3)) %>%
-  filter(Latitude > 29 & Latitude < 33) %>%
+  filter(Month %in% c(2,3) & Latitude > 29 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly33 <- rth_early %>%
-  filter(Month %in% c(3,4)) %>%
-  filter(Latitude > 33 & Latitude < 36) %>%
+  filter(Month %in% c(3,4) & Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE))
 
 rthearly36 <- rth_early %>%
-  filter(Month %in% c(3,4)) %>%
-  filter(Latitude > 36 & Latitude < 39) %>%
+  filter(Month %in% c(3,4) & Latitude > 36 & Latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly39 <- rth_early %>%
-  filter(Month %in% c(4,5)) %>%
-  filter(Latitude > 39 & Latitude < 42) %>%
+  filter(Month %in% c(4,5) & Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rthearly42 <- rth_early %>%
-  filter(Month %in% c(4,5)) %>%
-  filter(Latitude > 42 & Latitude < 45) %>%
+  filter(Month %in% c(4,5) & Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) 
 
 rth_early_all <- rbind(rthearly30, rthearly33, rthearly36, rthearly39, rthearly42)
-
 
 ```
 
@@ -456,9 +455,11 @@ rth_early_all <- rbind(rthearly30, rthearly33, rthearly36, rthearly39, rthearly4
 ```{r, warning=FALSE, message=FALSE}
 #| code-fold: TRUE
 
+#"mean0513" taken from early mean of corresponding latitudes in rth_early_all
+
 rth_new <- all_rth %>%
   filter(Year %in% c(2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025) & Month %in% c(2, 3, 4, 5)) %>%
-  mutate(mean0013 = 
+  mutate(mean0513 = 
   case_when(Latitude > 30 & Latitude < 33 ~ 77,
             Latitude > 33 & Latitude < 36 ~ 110.6667,
             Latitude > 36 & Latitude < 39 ~ 112.6667,
@@ -466,34 +467,29 @@ rth_new <- all_rth %>%
             Latitude > 42 & Latitude < 45 ~ 141
                               ))                          
 rth_30 <- rth_new %>%
-  filter(Month %in% c(2,3)) %>%
-  filter(Latitude > 30 & Latitude < 33) %>%
+  filter(Month %in% c(2,3) & Latitude > 30 & Latitude < 33) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
+  mutate(difference = mean - mean0513)
 
 rth_33 <- rth_new %>%
-  filter(Month %in% c(3,4)) %>%
-  filter(Latitude > 33 & Latitude < 36) %>%
+  filter(Month %in% c(3,4) & Latitude > 33 & Latitude < 36) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
+  mutate(difference = mean - mean0513)
 
 rth_36 <- rth_new %>%
-  filter(Month %in% c(3,4)) %>%
-  filter(Latitude > 36 & Latitude < 39) %>%
+  filter(Month %in% c(3,4) & Latitude > 36 & Latitude < 39) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
+  mutate(difference = mean - mean0513)
 
 rth_39 <- rth_new %>%
-  filter(Month %in% c(4,5)) %>%
-  filter(Latitude > 39 & Latitude < 42) %>%
+  filter(Month %in% c(4,5) & Latitude > 39 & Latitude < 42) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
+  mutate(difference = mean - mean0513)
 
 rth_42 <- rth_new %>%
-  filter(Month %in% c(4,5)) %>%
-  filter(Latitude > 42 & Latitude < 45) %>%
+  filter(Month %in% c(4,5) & Latitude > 42 & Latitude < 45) %>%
   mutate(mean = mean(year_day, na.rm = TRUE)) %>%
-  mutate(difference = mean - mean0013)
+  mutate(difference = mean - mean0513)
 
 rth_new_all <- rbind(rth_30, rth_33, rth_36, rth_39, rth_42)
 
