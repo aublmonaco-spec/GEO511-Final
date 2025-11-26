@@ -162,6 +162,7 @@ all_flower <- all_flower %>%
 
 all_flower <- all_flower %>%
   mutate(observed_on = parse_date_time(observed_on, orders = c("mdy", "ydm", "dmy"))) %>% # Standardizes date formats
+  mutate(year = year(observed_on)) %>%
   mutate(year_day = yday(observed_on)) %>% # Puts date into day out of 365
   mutate(month = month(observed_on)) # Pulls month from date
  
@@ -190,7 +191,7 @@ fl_means <- fl_early_all %>%
   rename("Latitude" = "latbin", "Flowering Day Mean" = "mean")
 
 #One row for each latitude band mean selected
-selected_fl <- fl_means[c(1, 25, 39), ]
+selected_fl <- fl_means[c(1, 25, 42), ]
 
 #Table to show early period flowering times based on latitude bands
 kable(selected_fl, format = "pipe", caption = '<span style="color: darkred;">2005-2013 Flowering Time Means (days)</span>')
@@ -214,10 +215,10 @@ fl_new <- all_flower %>%
          case_when(
          latitude > 30 & latitude < 33 ~ 81.95652,
          latitude > 33 & latitude < 36 ~ 81.95652,
-         latitude > 36 & latitude < 39 ~ 99.73333,
-         latitude > 39 & latitude < 42 ~ 99.73333,
-         latitude > 42 & latitude < 45 ~ 114.30769,
-         latitude > 45 & latitude < 48 ~ 114.30769))
+         latitude > 36 & latitude < 39 ~ 98.34783,
+         latitude > 39 & latitude < 42 ~ 98.34783,
+         latitude > 42 & latitude < 45 ~ 107.73913,
+         latitude > 45 & latitude < 48 ~ 107.73913))
 
 fl_new_all <- fl_new %>%
   mutate(latbin=cut(latitude, c(30,33,36,39,42,45,48), labels = c("30-33", "33-36", "36-39", "39-42","42-45", "45-48"))) %>%
@@ -232,7 +233,7 @@ fl_new_difference <- fl_new_all %>%
   rename("Latitude" = "latbin", "Difference in Ruby-throat Arrival Dates" = "difference") 
 
 #Selected 1 row for each latitude band difference
-fl_new_difference <- fl_new_difference[c(1, 895, 222, 1425, 2656, 4115), ]
+fl_new_difference <- fl_new_difference[c(1, 1194, 690, 2151, 505, 2810), ]
   
 ```
 
