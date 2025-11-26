@@ -311,7 +311,8 @@ npn_download_individual_phenometrics(
 
 npn_rth <- read.csv("data/npn_rth.csv")
   npn_rth <- npn_rth %>%
-  mutate(observed_on = (make_date(year = last_yes_year, month = last_yes_month, day = last_yes_day)))
+  mutate(Date = (make_date(year = last_yes_year, month = last_yes_month, day = last_yes_day))) %>%
+  mutate(Date = as.character(Date))
 
 ```
 
