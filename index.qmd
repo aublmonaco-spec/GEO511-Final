@@ -193,7 +193,7 @@ fl_means <- fl_early_all %>%
 # One row for each latitude band mean selected
 selected_fl <- fl_means[c(1, 25, 68), ]
 
-# Converting yearday into date
+# Converting yearday into date (DOYs taken from "mean" column of fl_early_all)
 origin_date <- as.Date(paste0(2013, "-01-01"))
 fl_early_date1 <- as.Date(82 - 1, origin = origin_date)
 fl_early_date2 <- as.Date(98 - 1, origin = origin_date)
@@ -244,7 +244,7 @@ fl_new_difference <- fl_new_all %>%
   select(latbin, difference) %>%
   rename("Latitude" = "latbin", "Difference in Flowering Dates" = "difference") 
 
-# Finding average flowering dates for the recent period
+# Finding average flowering dates for the recent period (DOYs taken from "mean" column of fl_new_all)
 origin_date2 <- as.Date(paste0(2025, "-01-01"))
 fl_new_date1 <- as.Date(93 - 1, origin = origin_date2)
 fl_new_date2 <- as.Date(94 - 1, origin = origin_date2)
@@ -450,6 +450,7 @@ rth_means <- rth_early_all %>%
   select(latbin, mean) %>%
   rename("Latitude" = "latbin", "Ruby-throat Average Arrival Dates (days)" = "mean")
 
+# (DOYs taken from "mean" column of rth_early_all)
 rth_early_date1 <- as.Date(80 - 1, origin = origin_date)
 rth_early_date2 <- as.Date(94 - 1, origin = origin_date)
 rth_early_date3 <- as.Date(105 - 1, origin = origin_date)
@@ -497,6 +498,7 @@ rth_new_difference <- rth_new_all %>%
   select(latbin, difference) %>%
   rename("Latitude" = "latbin", "Difference in Ruby-throat Arrival Dates" = "difference")
 
+# (DOYs taken from "mean" column of rth_new_all)
 origin_date2 <- as.Date(paste0(2025, "-01-01"))
 rth_new_date1 <- as.Date(85 - 1, origin = origin_date2)
 rth_new_date2 <- as.Date(95 - 1, origin = origin_date2)
