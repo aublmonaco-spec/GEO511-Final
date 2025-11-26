@@ -106,7 +106,8 @@ get_inat_obs(taxon_name = s, year = a, place_id = 1, maxresults = 10000, quality
 nat_flower <- read.csv("data/fl_all.csv") 
 nat_flower <- nat_flower %>%
   filter(common_name %in% c("red columbine", "Red Buckeye")) %>%
-  mutate(year = year(observed_on))
+  mutate(year = year(observed_on)) %>%
+  mutate(observed_on = as.character(observed_on))
 
 ```
 
@@ -133,7 +134,8 @@ npn_download_individual_phenometrics(
 
 npn_flower <- read.csv("data/npn_flower.csv") 
 npn_flower <- npn_flower %>%
-  rename(year = first_yes_year)
+  mutate(observed_on = make_date(year = last_yes_year, month = last_yes_month, day = last_yes_day)) %>%
+  mutate(observed_on = as.character(observed_on))
 
 ```
 
@@ -282,6 +284,8 @@ get_inat_obs(taxon_name = "Archilochus colubris", year = e, place_id = 1, maxres
 rth_nat <- rbind(rth_0519, rth_2025)
 
 write.csv(rth_nat, "data/rth_nat.csv")
+rth_nat <- rth_nat %>%
+  mutate(observed_on = as.character(observed_on))
 
 ```
 
@@ -307,7 +311,7 @@ npn_download_individual_phenometrics(
 
 npn_rth <- read.csv("data/npn_rth.csv")
   npn_rth <- npn_rth %>%
-  rename(Year = first_yes_year)
+  mutate(observed_on = (make_date(year = last_yes_year, month = last_yes_month, day = last_yes_day)))
 
 ```
 
