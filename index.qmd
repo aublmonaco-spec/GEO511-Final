@@ -14,15 +14,15 @@ With warming temperatures due to anthropogenic climate change, migrating birds a
 
 ![[Ruby-throated Hummingbird [3]]{style="color:darkblue;"}](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10* years, also at varying latitudes [4].
+I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, based on Courter et al., 2013 [4], and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10* years, also at varying latitudes [5].
 
 *My maps and graphs are from 2014 to 2025 to account for any incomplete datasets from 2025
 
 ::: {layout-ncol=2}
 
-![[Red Columbine [5]]{style="color:darkred;"}](data/cb_1.jpg){fig-align="center" width="200"}
+![[Red Columbine [6]]{style="color:darkred;"}](data/cb_1.jpg){fig-align="center" width="200"}
 
-![[Red Buckeye [6]]{style="color:darkred;"}](data/rb_1.jpg){fig-align="center" width="226"}
+![[Red Buckeye [7]]{style="color:darkred;"}](data/rb_1.jpg){fig-align="center" width="226"}
 
 :::
 
@@ -171,7 +171,7 @@ all_flower <- all_flower %>%
 ## 5. 
 ### Flowers: Calculate Means of Early Period (2005-2013)
 
-- Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [7, 8]
+- Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [8, 9]
 - Separated sightings into 3 bands of latitude to account for difference in average flowering times across their range (grouped by latitudes with similar "year_day" averages)
 
 ```{r, message=FALSE, warning=FALSE}
@@ -432,7 +432,7 @@ all_rth <- all_rth %>%
 
 ```
 
-- Filtering between 2005-2013 and from February to May to account for Ruby-throat migration arrival times at varying latitudes based on Journey North and Courter et al., 2013
+- Filtering between 2005-2013 and from February to May to account for Ruby-throat migration arrival times at varying latitudes based on Journey North and Courter et al., 2013 [4]
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -552,7 +552,7 @@ leaflet(all_flower)%>%
   addHeatmap()
 
 ```
-Flower Observation Locations
+**Flower Observation Locations**
 
 Data is concentrated in urban areas, with places like New York City, New York and Austin and San Antonio, Texas providing many observations.
 
@@ -577,7 +577,7 @@ leaflet(all_rth_map)%>%
   addHeatmap(lng = ~longitude, lat = ~latitude)
 
 ```
-Ruby-throat Observation Locations
+**Ruby-throat Observation Locations**
 
 Data is concentrated in urban areas, especially cities in the Northeast.
 
@@ -683,7 +683,7 @@ Generally, Red Columbine and Red Buckeye flowering happens over a shorter time w
 
 Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
 
-Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 33, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [9].
+Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 33, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [4].
 
 These trends do somewhat align, especially at higher latitudes. So, Red Columbine and Red Buckeye should be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
 
@@ -699,17 +699,17 @@ In the future, more data could be integrated into this code to create a longer-t
 
 3. Ruby-throated Hummingbird Overview, All About Birds, Cornell Lab of Ornithology. (n.d.). Retrieved November 19, 2025, from <https://www.allaboutbirds.org/guide/Ruby-throated_Hummingbird/overview>
 
-4. Ruby-throated Hummingbird. (n.d.). Retrieved November 19, 2025, from <https://www.fs.usda.gov/wildflowers/pollinators/pollinator-of-the-month/ruby-throated_hummingbird.shtml>
+4. Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds (*Archilochus colubris*) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
 
-5. Wild Columbine (Plants of Connecticut) · iNaturalist. (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/guide_taxa/373315>
+5. Ruby-throated Hummingbird. (n.d.). Retrieved November 19, 2025, from <https://www.fs.usda.gov/wildflowers/pollinators/pollinator-of-the-month/ruby-throated_hummingbird.shtml>
 
-6. Red Buckeye (Aesculus pavia). (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/taxa/81708-Aesculus-pavia>
+6. Wild Columbine (Plants of Connecticut) · iNaturalist. (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/guide_taxa/373315>
 
-7. Red Columbine. (2004). Retrieved November 19, 2025, from <https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_aqca.pdf>
+7. Red Buckeye (Aesculus pavia). (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/taxa/81708-Aesculus-pavia>
 
-8. USDA Plants Database Plant Profile General. (n.d.). Retrieved November 19, 2025, from <https://plants.usda.gov/plant-profile/AEPA>
+8. Red Columbine. (2004). Retrieved November 19, 2025, from <https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_aqca.pdf>
 
-9. Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds (*Archilochus colubris*) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
+9. USDA Plants Database Plant Profile General. (n.d.). Retrieved November 19, 2025, from <https://plants.usda.gov/plant-profile/AEPA>
 
 10. Kudo, G., & Cooper, E. J. (2019). When spring ephemerals fail to meet pollinators: Mechanism of phenological mismatch and its impact on plant reproduction. Proceedings of the Royal Society B: Biological Sciences, 286(1904), 20190573. <https://doi.org/10.1098/rspb.2019.0573>
 
