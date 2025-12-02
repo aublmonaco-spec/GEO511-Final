@@ -302,7 +302,7 @@ get_inat_obs(taxon_name = "Archilochus colubris", year = e, place_id = 1, maxres
 ```{r, eval=FALSE}
 #| code-fold: TRUE
 
-# Combined all iNat data into one data set for Ruby-Throats
+# Combined all iNat data into one data set for Ruby-throats
 
 rth_nat <- rbind(rth_0519, rth_2025)
 
@@ -317,7 +317,7 @@ rth_nat <- rth_nat %>%
 ```{r, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
 
-# Ruby-Throated Hummingbird = 352 (Species ID)
+# Ruby-throated Hummingbird = 352 (Species ID)
 
 npn_download_individual_phenometrics(
  request_source='Aubrey Monaco', 
@@ -579,7 +579,7 @@ leaflet(all_rth_map)%>%
 ```
 **Ruby-throat Observation Locations**
 
-Data is concentrated in urban areas, especially cities in the Northeast.
+Data is concentrated in urban areas, especially cities in the Northeast like New York City and Philadelphia.
 
 :::
 
@@ -642,7 +642,7 @@ leaflet(rth_new_all) %>%
   setView(-94.5, 40, zoom = 4)
 
 ```
-At the lowest latitudes, Ruby-throat sightings occur later on average than in the early period. Moving higher, though, Ruby-throats are sighted increasingly later than the early period. Average first sightings for the lowest latitudes in the recent period begin on March 21st, as compared to March 26th in the early period. Average sightings for the highest latitude in the recent period begin May 7th, as compared to May 9th in the early period.
+At lower latitudes, Ruby-throat sightings occur later on average than in the early period. Moving higher, though, Ruby-throats are sighted increasingly later than the early period. Average first sightings for the lowest latitudes in the recent period begin on March 21st, as compared to March 26th in the early period. Average sightings for the highest latitude in the recent period begin May 7th, as compared to May 9th in the early period.
 
 ### Difference in Arrival Times (Days)
 
@@ -683,13 +683,15 @@ Generally, Red Columbine and Red Buckeye flowering happens over a shorter time w
 
 Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
 
-Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 33, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [4].
+Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 36, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [4].
 
 These trends do somewhat align, especially at higher latitudes. So, Red Columbine and Red Buckeye should be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
 
-It is important to note that this dataset is relatively small, and data used to acquire average arrival/bloom dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data distribution may not be even. As shown in the observation heatmaps, sightings do tend to be concentrated in urban areas.
+It is important to note that this dataset is relatively small, and data used to acquire average arrival/flowering dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data distribution may not be even. As shown in the observation heatmaps, sightings do tend to be concentrated in urban areas.
 
-In the future, more data could be integrated into this code to create a longer-term understanding of these trends, especially weather data. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but also during breeding season, fall migration, and overwintering periods. Looking at more geographically accurate boundaries as shown in Courter et al. (2013)'s work would also help give more insight into these trends. Understanding trends like these can give insight into how climate change is affecting biodiversity and hopefully help motivate change and showcase why this biodiversity is important to protect.
+## Future Studies
+
+In the future, more data could be integrated into this code to create a longer-term understanding of these trends, especially weather data. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but also during breeding season, fall migration, and overwintering periods. Looking at more geographically accurate boundaries as shown in Courter et al.'s work would also help give more insight into these trends. Understanding trends like these can give insight into how climate change is affecting biodiversity and hopefully help motivate change and showcase why this biodiversity is important to protect.
 
 # References
 
