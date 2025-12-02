@@ -6,33 +6,32 @@ date: today
 date-format: long
 editor_options:
   chunk_output_type: console
+bibliography: references.bib
 ---
 
 # Introduction
 
-With warming temperatures due to anthropogenic climate change, migrating birds are starting to move back to their breeding grounds earlier each year [1]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be changing their flowering times due to climate change [2].
+With warming temperatures due to anthropogenic climate change, migrating birds are starting to move back to their breeding grounds earlier each year [@gill2014]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be changing their flowering times due to climate change [@xie2025].
 
-![[Ruby-throated Hummingbird [3]]{style="color:darkblue;"}](data/rth_1.jpg){fig-align="center" width="400"}
+![[Ruby-throated Hummingbird]{style="color:darkblue;"}[@ruby-thr2024]](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, based on Courter et al., 2013 [4], and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10* years, also at varying latitudes [5].
+I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, based on Courter et al., 2013 [@courter2013], and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10\* years, also at varying latitudes [@ruby-thra].
 
-*My maps and graphs are from 2014 to 2025 to account for any incomplete datasets from 2025
+\*My maps and graphs are from 2014 to 2025 to account for any incomplete datasets from 2025
 
-::: {layout-ncol=2}
+::: {layout-ncol="2"}
+![[Red Columbine]{style="color:darkred;"} [@wildcola]](data/cb_1.jpg){fig-align="center" width="200"}
 
-![[Red Columbine [6]]{style="color:darkred;"}](data/cb_1.jpg){fig-align="center" width="200"}
-
-![[Red Buckeye [7]]{style="color:darkred;"}](data/rb_1.jpg){fig-align="center" width="226"}
-
+![[Red Buckeye]{style="color:darkred;"} [@redbucka]](data/rb_1.jpg){fig-align="center" width="226"}
 :::
 
 I predict that Ruby-throated Hummingbirds are migrating back to their breeding grounds earlier each year, and that they are arriving at higher latitudes increasingly earlier than lower latitudes. Additionally, I suppose that the first sightings of Red Columbine and Red Buckeye will be earlier at higher latitudes and later at lower latitudes compared to previous years. So, as Ruby-throated Hummingbirds migrate back earlier, these flowers may not be available at lower latitudes for them to feed on.
 
 # Materials and Methods
 
-:::{.panel-tabset}
+::: panel-tabset
+## 1.
 
-## 1. 
 ### Install Packages and Load Libraries
 
 ```{r, message=FALSE, warning=FALSE}
@@ -61,12 +60,13 @@ library(ggplot2)# Plotting trends
 
 ```
 
-## 2. 
+## 2.
+
 ### Flowers: Load iNaturalist and US NPN Data.
 
-- foreach, doParallel, and rinat package iNaturalist data download: 
+-   foreach, doParallel, and rinat package iNaturalist data download:
 
-  - taxon_name is set to each desired species, place_id is set to 1 for the United States, maxresults is set to 10000 to ensure all data is downloaded, and quality is set to "research" to ensure verified data
+    -   taxon_name is set to each desired species, place_id is set to 1 for the United States, maxresults is set to 10000 to ensure all data is downloaded, and quality is set to "research" to ensure verified data
 
 ```{r message=FALSE, warning=FALSE, eval=FALSE}
 #| code-fold: TRUE
@@ -94,7 +94,7 @@ get_inat_obs(taxon_name = s, year = a, place_id = 1, maxresults = 10000, quality
 
 ```
 
-- Individual datasets combined and written csv is loaded into environment as "nat_flower":
+-   Individual datasets combined and written csv is loaded into environment as "nat_flower":
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -111,7 +111,7 @@ nat_flower <- nat_flower %>%
 
 ```
 
-- rnpn package for NPN data download (automatically saves as a csv): 
+-   rnpn package for NPN data download (automatically saves as a csv):
 
 ```{r, message=FALSE, warning=FALSE, eval=FALSE}
 #| code-fold: TRUE
@@ -127,7 +127,7 @@ npn_download_individual_phenometrics(
 
 ```
 
-- NPN data loaded into environment:
+-   NPN data loaded into environment:
 
 ```{r}
 #| code-fold: TRUE
@@ -139,7 +139,8 @@ npn_flower <- npn_flower %>%
 
 ```
 
-## 3.  
+## 3.
+
 ### Flowers: Combine the iNaturalist and NPN Data
 
 ```{r, message=FALSE}
@@ -153,7 +154,8 @@ all_flower <- all_flower %>%
 
 ```
 
-## 4. 
+## 4.
+
 ### Flowers: Standardize and Mutate Data
 
 ```{r, message=FALSE, warning=FALSE}
@@ -168,11 +170,12 @@ all_flower <- all_flower %>%
  
 ```
 
-## 5. 
+## 5.
+
 ### Flowers: Calculate Means of Early Period (2005-2013)
 
-- Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [8, 9]
-- Separated sightings into 3 bands of latitude to account for difference in average flowering times across their range (grouped by latitudes with similar "year_day" averages)
+-   Found the mean date of first flower sightings from 2005 to 2013 and from March to May (when these flowers' bloom times overlap) [@redcolu2004a; @usdaplab]
+-   Separated sightings into 3 bands of latitude to account for difference in average flowering times across their range (grouped by latitudes with similar "year_day" averages)
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -210,13 +213,14 @@ kable(selected_fl, format = "pipe", caption = '<span style="color: darkred;">200
 
 ```
 
-## 6. 
+## 6.
+
 ### Flowers: Calculate Means and Difference From 2014-2025 to 2005-2013
 
-- Added a column (mean0513) based on "2005-2013 Flowering Time Means" table and assigned by corresponding latitudes
-- Used 6 bands of latitude for more specific analysis
-- Created a "difference" column, showing the difference in days of arrival between the early and current average using mean - mean0513
-- Bound all of these bands into one dataset for plotting
+-   Added a column (mean0513) based on "2005-2013 Flowering Time Means" table and assigned by corresponding latitudes
+-   Used 6 bands of latitude for more specific analysis
+-   Created a "difference" column, showing the difference in days of arrival between the early and current average using mean - mean0513
+-   Bound all of these bands into one dataset for plotting
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -259,10 +263,11 @@ fl_new_difference <- fl_new_difference %>%
   
 ```
 
-## 7. 
+## 7.
+
 ### Repeat Process for Ruby-throated Hummingbirds
 
-- Used data from eBird and Journey North in addition to iNaturalist and the US NPN.
+-   Used data from eBird and Journey North in addition to iNaturalist and the US NPN.
 
 My eBird datasets can be found on figshare here:
 
@@ -276,7 +281,7 @@ Or:
 
 Download the Ruby-throated Hummingbird data from eBird by visiting: <https://media.ebird.org/catalog?birdOnly=true&taxonCode=rthhum>, filter by year (I did this in two separate actions \[1995-2021 and 2022-2025\] to ensure I could download all of the data), filter by location (United States), and download as a csv.
 
-- iNaturalist data download:
+-   iNaturalist data download:
 
 ```{r, message=FALSE, warning=FALSE, eval=FALSE}
 #| code-fold: TRUE
@@ -312,7 +317,7 @@ rth_nat <- rth_nat %>%
 
 ```
 
-- NPN data download:
+-   NPN data download:
 
 ```{r, warning=FALSE, message=FALSE, eval=FALSE}
 #| code-fold: TRUE
@@ -327,7 +332,7 @@ npn_download_individual_phenometrics(
 
 ```
 
-- NPN data loaded into environment:
+-   NPN data loaded into environment:
 
 ```{r}
 #| code-fold: TRUE
@@ -380,7 +385,7 @@ as.data.frame()
 
 ```
 
-- Joining all data:
+-   Joining all data:
 
 ```{r, warning=FALSE, message=FALSE}
 #| code-fold: TRUE
@@ -419,7 +424,7 @@ all_rth <- all_rth %>%
 
 ```
 
-- Parsing and mutating data:
+-   Parsing and mutating data:
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -432,7 +437,7 @@ all_rth <- all_rth %>%
 
 ```
 
-- Filtering between 2005-2013 and from February to May to account for Ruby-throat migration arrival times at varying latitudes based on Journey North and Courter et al., 2013 [4]
+-   Filtering between 2005-2013 and from February to May to account for Ruby-throat migration arrival times at varying latitudes based on Journey North and Courter et al., 2013 \[4\]
 
 ```{r, message=FALSE, warning=FALSE}
 #| code-fold: TRUE
@@ -470,8 +475,8 @@ kable(selected_rth, format = "pipe", caption = '<span style="color: darkblue;">2
 
 ```
 
-- "mean0513" column values taken from "Ruby-throat Arrival Means" table and assigned based on corresponding latitudes
-- 2014-2025 Ruby-throat dataset:
+-   "mean0513" column values taken from "Ruby-throat Arrival Means" table and assigned based on corresponding latitudes
+-   2014-2025 Ruby-throat dataset:
 
 ```{r, warning=FALSE, message=FALSE}
 #| code-fold: TRUE
@@ -517,7 +522,8 @@ rth_new_difference <- rth_new_difference %>%
 
 ```
 
-## 8. 
+## 8.
+
 ### Create Color Palettes
 
 ```{r}
@@ -530,18 +536,16 @@ cpal <- colorNumeric(palette = "viridis", domain = fl_new_all$difference, na.col
 rpal <- colorNumeric(palette = "viridis", domain = rth_new_all$difference, na.color = NA)
  
 ```
-
 :::
 
 # Results
 
 ## Where Is This Data Coming From?
+
 ### Observation Locations of Flowers and Ruby-throats
 
-:::: {.columns}
-
+:::::: columns
 ::: {.column width="48%"}
-
 ```{r, message=FALSE}
 #| code-fold: TRUE
 #| label: map-left
@@ -552,18 +556,16 @@ leaflet(all_flower)%>%
   addHeatmap()
 
 ```
+
 **Flower Observation Locations**
 
 Data is concentrated in urban areas, with places like New York City, New York and Austin and San Antonio, Texas providing many observations.
-
 :::
 
 ::: {.column width="4%"}
-
 :::
 
 ::: {.column width="48%"}
-
 ```{r}
 #| code-fold: TRUE
 #| label: map-right
@@ -577,18 +579,16 @@ leaflet(all_rth_map)%>%
   addHeatmap(lng = ~longitude, lat = ~latitude)
 
 ```
+
 **Ruby-throat Observation Locations**
 
 Data is concentrated in urban areas, especially cities in the Northeast like New York City and Philadelphia.
-
 :::
-
-::::
+::::::
 
 ## Trends in Flowering Times (2014 - 2025)
 
-:::{.panel-tabset}
-
+::: panel-tabset
 ### Flowering Times Map (2014 - 2025)
 
 ```{r}
@@ -607,6 +607,7 @@ leaflet(fl_new_all) %>%
   setView(-94.5, 40, zoom = 4) # Based on estimate of central point for the map
 
 ```
+
 At lower latitudes, flower sightings occur later on average than in the early period. Moving higher, flowers are sighted increasingly later than the early period. Average first sightings for the recent period begin on April 6th, as compared to March 23rd in the early period.
 
 ### Difference in Flowering Times (Days)
@@ -617,13 +618,11 @@ At lower latitudes, flower sightings occur later on average than in the early pe
 kable(fl_new_difference, format = "pipe", caption = '<span style="color: darkred;">2014-2025 Difference in Days</span>', align = "c")
 
 ```
-
 :::
 
 ## Trends in Ruby-throat Sightings (2014 - 2025)
 
-::: {.panel-tabset}
-
+::: panel-tabset
 ### Ruby-throat Sightings Map (2014 - 2025)
 
 ```{r}
@@ -642,6 +641,7 @@ leaflet(rth_new_all) %>%
   setView(-94.5, 40, zoom = 4)
 
 ```
+
 At lower latitudes, Ruby-throat sightings occur later on average than in the early period. Moving higher, though, Ruby-throats are sighted increasingly later than the early period. Average first sightings for the lowest latitudes in the recent period begin on March 21st, as compared to March 26th in the early period. Average sightings for the highest latitude in the recent period begin May 7th, as compared to May 9th in the early period.
 
 ### Difference in Arrival Times (Days)
@@ -652,7 +652,6 @@ At lower latitudes, Ruby-throat sightings occur later on average than in the ear
 kable(rth_new_difference, format = "pipe", caption = '<span style="color: darkblue;">2014-2025 Difference in Days</span>', align = "c")
 
 ```
-
 :::
 
 ## Average Flowering/Arrival Times (2005-2013)
@@ -665,6 +664,7 @@ early_plot <- ggplot() + geom_point(data = fl_early_all, aes(x = mean, y = latit
 ggplotly(early_plot)
 
 ```
+
 Generally, Red Columbine and Red Buckeye flowering is spread over a larger portion of Ruby-throat spring migration, and first flowering sightings begin on almost the same day as the first sightings of Ruby-throats at the lowest latitudes (March 21st for Ruby-throats and March 23rd for flowers, as based on the tables of 2005-2013 arrival/flowering times).
 
 ## Average Flowering/Arrival Times (2014-2025)
@@ -677,13 +677,14 @@ late_plot <- ggplot() + geom_point(data = fl_new_all, aes(x = mean, y = latitude
 ggplotly(late_plot)
 
 ```
-Generally, Red Columbine and Red Buckeye flowering happens over a shorter time within Ruby-throat spring migration, and first flowering sightings begin about a week (March 26th for Ruby-throat arrival and April 3rd for flower sightings, as based on the tables of 2014-2025 arrival/flowering times) after Ruby-throat arrival at the lowest latitudes. 
+
+Generally, Red Columbine and Red Buckeye flowering happens over a shorter time within Ruby-throat spring migration, and first flowering sightings begin about a week (March 26th for Ruby-throat arrival and April 3rd for flower sightings, as based on the tables of 2014-2025 arrival/flowering times) after Ruby-throat arrival at the lowest latitudes.
 
 # Conclusions
 
-Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [10].
+Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [@kudo2019].
 
-Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 36, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [4].
+Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 36, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [@courter2013].
 
 These trends do somewhat align, especially at higher latitudes. So, Red Columbine and Red Buckeye should be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
 
@@ -692,27 +693,5 @@ It is important to note that this dataset is relatively small, and data used to 
 ## Future Studies
 
 In the future, more data could be integrated into this code to create a longer-term understanding of these trends, especially weather data. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but also during breeding season, fall migration, and overwintering periods. Looking at more geographically accurate boundaries as shown in Courter et al.'s work would also help give more insight into these trends. Understanding trends like these can give insight into how climate change is affecting biodiversity and hopefully help motivate change and showcase why this biodiversity is important to protect.
-
-# References
-
-1. Gill, J. A., Alves, J. A., Sutherland, W. J., Appleton, G. F., Potts, P. M., & Gunnarsson, T. G. (2014). Why is timing of bird migration advancing when individuals are not? Proceedings of the Royal Society B: Biological Sciences, 281(1774), 20132161. <https://doi.org/10.1098/rspb.2013.2161>
-
-2. Xie, Y., Thammavong, H. T., Turner, A. L., Turner, B. I., & Park, D. S. (2025). Shifting spring ephemeral pollination windows under climate change – a three-body problem. New Phytologist, 248(1), 354–369. <https://doi.org/10.1111/nph.70373>
-
-3. Ruby-throated Hummingbird Overview, All About Birds, Cornell Lab of Ornithology. (n.d.). Retrieved November 19, 2025, from <https://www.allaboutbirds.org/guide/Ruby-throated_Hummingbird/overview>
-
-4. Courter, J. R., Johnson, R. J., Bridges, W. C., & Hubbard, K. G. (2013). Assessing migration of Ruby-throated Hummingbirds (*Archilochus colubris*) at broad spatial and temporal scales. The Auk, 130(1), 107–117. <https://doi.org/10.1525/auk.2012.12058>
-
-5. Ruby-throated Hummingbird. (n.d.). Retrieved November 19, 2025, from <https://www.fs.usda.gov/wildflowers/pollinators/pollinator-of-the-month/ruby-throated_hummingbird.shtml>
-
-6. Wild Columbine (Plants of Connecticut) · iNaturalist. (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/guide_taxa/373315>
-
-7. Red Buckeye (Aesculus pavia). (n.d.). iNaturalist. Retrieved November 19, 2025, from <https://www.inaturalist.org/taxa/81708-Aesculus-pavia>
-
-8. Red Columbine. (2004). Retrieved November 19, 2025, from <https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_aqca.pdf>
-
-9. USDA Plants Database Plant Profile General. (n.d.). Retrieved November 19, 2025, from <https://plants.usda.gov/plant-profile/AEPA>
-
-10. Kudo, G., & Cooper, E. J. (2019). When spring ephemerals fail to meet pollinators: Mechanism of phenological mismatch and its impact on plant reproduction. Proceedings of the Royal Society B: Biological Sciences, 286(1904), 20190573. <https://doi.org/10.1098/rspb.2019.0573>
 
 Thanks for checking out my web site!
