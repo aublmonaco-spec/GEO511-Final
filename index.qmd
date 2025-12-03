@@ -11,11 +11,11 @@ bibliography: references.bib
 
 # Introduction
 
-With warming temperatures due to anthropogenic climate change, migrating birds are starting to move back to their breeding grounds earlier each year [@gill2014]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be changing their flowering times due to climate change [@xie2025].
+With warming temperatures due to anthropogenic climate change, migrating birds are starting to move back to their breeding grounds earlier each year [@gill2014]. Along with this, flowers that certain migrating birds, like Ruby-throated Hummingbirds (*Archilochus colubris*), feed on may be altering their flowering times due to these changing temperatures [@xie2025].
 
 ![[Ruby-throated Hummingbird]{style="color:darkblue;"}[@ruby-thr2024]](data/rth_1.jpg){fig-align="center" width="400"}
 
-I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, based on Courter et al., 2013 [@courter2013], and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), has changed (or not changed) over the past 10\* years, also at varying latitudes [@ruby-thra].
+I want to investigate how the Ruby-throated Hummingbird has been shifting its spring migration patterns at varying latitudes, based on Courter et al., 2013 [@courter2013], and how the appearances of two spring ephemeral species it prefers to feed on during this migration, Red Buckeye (*Aesculus pavia*) and Red Columbine (*Aquilegia canadensis*), have changed (or not changed) over the past 10\* years, also at varying latitudes [@ruby-thra].
 
 \*My maps and graphs are from 2014 to 2025 to account for any incomplete datasets from 2025
 
@@ -25,7 +25,7 @@ I want to investigate how the Ruby-throated Hummingbird has been shifting its sp
 ![[Red Buckeye]{style="color:darkred;"} [@redbucka]](data/rb_1.jpg){fig-align="center" width="226"}
 :::
 
-I predict that Ruby-throated Hummingbirds are migrating back to their breeding grounds earlier each year, and that they are arriving at higher latitudes increasingly earlier than lower latitudes. Additionally, I suppose that the first sightings of Red Columbine and Red Buckeye will be earlier at higher latitudes and later at lower latitudes compared to previous years. So, as Ruby-throated Hummingbirds migrate back earlier, these flowers may not be available at lower latitudes for them to feed on.
+I predict that Ruby-throated Hummingbirds are generally migrating back to their breeding grounds earlier in the recent period, and that they are arriving at higher latitudes increasingly earlier than lower latitudes. Additionally, I suppose that the first sightings of Red Columbine and Red Buckeye will be earlier at higher latitudes and later at lower latitudes compared to previous years. So, as Ruby-throated Hummingbirds migrate back earlier, these flowers may not be available at lower latitudes for them to feed on.
 
 # Materials and Methods
 
@@ -193,11 +193,11 @@ fl_means <- fl_early_all %>%
   summarise(mean) %>%
   rename("Latitude" = "latbin", "Flowering Day Mean" = "mean")
 
-# One row for each latitude band mean selected
+# One row for each latitude band mean selected randomly by going through the dataset
 selected_fl <- fl_means[c(1, 25, 68), ]
 
 # Converting yearday into date (DOYs taken from "mean" column of fl_early_all)
-origin_date <- as.Date(paste0(2013, "-01-01"))
+origin_date <- as.Date(paste0(2013, "-01-01")) # 2013 chosen randomly, as year from the early period was needed for this function
 fl_early_date1 <- as.Date(82 - 1, origin = origin_date)
 fl_early_date2 <- as.Date(98 - 1, origin = origin_date)
 fl_early_date3 <- as.Date(108 - 1, origin = origin_date)
@@ -249,13 +249,13 @@ fl_new_difference <- fl_new_all %>%
   rename("Latitude" = "latbin", "Difference in Flowering Dates" = "difference") 
 
 # Finding average flowering dates for the recent period (DOYs taken from "mean" column of fl_new_all)
-origin_date2 <- as.Date(paste0(2025, "-01-01"))
+origin_date2 <- as.Date(paste0(2025, "-01-01")) # 2025 chosen randomly, as year from the recent period was needed for this function
 fl_new_date1 <- as.Date(93 - 1, origin = origin_date2)
 fl_new_date2 <- as.Date(94 - 1, origin = origin_date2)
 fl_new_date3 <- as.Date(96 - 1, origin = origin_date2)
 fl_new_dates <- c("April 3", "April 3", "April 4", "April 4", "April 6", "April 6")
 
-# Selected 1 row for each latitude band difference
+# Selected 1 row randomly by going through the dataset for each latitude band difference
 fl_new_difference <- fl_new_difference[c(1, 1194, 690, 2151, 505, 2810), ] 
 fl_new_difference <- cbind(fl_new_difference, fl_new_dates)
 fl_new_difference <- fl_new_difference %>%
@@ -287,7 +287,6 @@ Download the Ruby-throated Hummingbird data from eBird by visiting: <https://med
 #| code-fold: TRUE
 
 # Parallel data download for Ruby-throats 2005-2019
-
 rth_0519 <- foreach(e = c(2005:2019), .packages = c("dplyr", "rinat"), .combine = bind_rows) %dopar% {
 print(paste("Downloading data for year:", e))
 Sys.sleep(45)
@@ -295,7 +294,6 @@ get_inat_obs(taxon_name = "Archilochus colubris", year = e, place_id = 1, maxres
 }
 
 # Sequential data download for Ruby-throats 2020-2025
-
 rth_2025 <- foreach(e = c(2020:2025), .packages = c("dplyr", "rinat"), .combine = bind_rows) %do% {
 print(paste("Downloading data for year:", e))
 Sys.sleep(45)
@@ -465,7 +463,7 @@ rth_early_date6 <- as.Date(129 - 1, origin = origin_date)
 rth_early_dates <- c(rth_early_date1, rth_early_date2, rth_early_date3, rth_early_date4, rth_early_date5, rth_early_date6)
 rth_early_dates <- format(rth_early_dates, format = "%B %d")
 
-# One row for each latitude band mean selected
+# One row for each latitude band mean randomly selected
 selected_rth <- rth_means[c(5, 15099, 6639, 7940, 7395, 7), ]
 selected_rth <- cbind(selected_rth, rth_early_dates)
 selected_rth <- selected_rth %>%
@@ -514,7 +512,7 @@ rth_new_date6 <- as.Date(127 - 1, origin = origin_date2)
 rth_new_dates <- c(rth_new_date1, rth_new_date2, rth_new_date3, rth_new_date4, rth_new_date5, rth_new_date6)
 rth_new_dates <- format(rth_new_dates, format = "%B %d")
 
-# One row for each latitude band difference selected
+# One row for each latitude band difference randomly selected
 rth_new_difference <- rth_new_difference[c(1, 14105, 13263, 8261, 24450, 92), ]
 rth_new_difference <- cbind(rth_new_difference, rth_new_dates)
 rth_new_difference <- rth_new_difference %>%
@@ -582,7 +580,7 @@ leaflet(all_rth_map)%>%
 
 **Ruby-throat Observation Locations**
 
-Data is concentrated in urban areas, especially cities in the Northeast like New York City and Philadelphia.
+Data is concentrated in urban areas, especially cities in the Northeast like New York City, New York and Philadelphia, Pennsylvania.
 :::
 ::::::
 
@@ -682,16 +680,16 @@ Generally, Red Columbine and Red Buckeye flowering happens over a shorter time w
 
 # Conclusions
 
-Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, flowering times are later than the early average. But for latitudes between 30 and 36, flowers have been sighted later than in previous years. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [@kudo2019].
+Trends for Red Columbine and Red Buckeye show that the timing of their first observations have changed from the 2005-2013 average. At the highest latitudes, average flowering times are later than in the early period. But for latitudes between 30 and 36, flowers have been sighted later than in the early period. Since these flowers are spring ephemerals, warmer winter temperatures, or more extreme heat in spring and summer, may cause this trend, as these flowers will not bloom under extreme heat, or until they have gone through a period of sufficient cooling [@kudo2019].
 
 Additionally, the average first observation date for Ruby-throated hummingbirds has been generally shifting earlier with increasing latitudes. Between latitudes 30 and 36, though, Ruby-throats have been sighted later on average compared to the early period. This may be due to longer overwintering periods [@courter2013].
 
-These trends do somewhat align, especially at higher latitudes. So, Red Columbine and Red Buckeye should be available when Ruby-throats migrate back to higher latitudes earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
+So, at higher latitudes, Red Columbine and Red Buckeye should be available when Ruby-throats migrate back earlier. But, Ruby-throats may may miss the flowering of these plants at lower latitudes.
 
 It is important to note that this dataset is relatively small, and data used to acquire average arrival/flowering dates for 2005 to 2013 was sparse. Additionally, since this data is collected from citizen science projects, the data distribution may not be even. As shown in the observation heatmaps, sightings do tend to be concentrated in urban areas.
 
 ## Future Studies
 
-In the future, more data could be integrated into this code to create a longer-term understanding of these trends, especially weather data. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but also during breeding season, fall migration, and overwintering periods. Looking at more geographically accurate boundaries as shown in Courter et al.'s work would also help give more insight into these trends. Understanding trends like these can give insight into how climate change is affecting biodiversity and hopefully help motivate change and showcase why this biodiversity is important to protect.
+In the future, more observational data could be integrated into this code to create a longer-term understanding of these trends. Weather data, like temperature trends, would also be helpful to include. Additionally, it is important to understand what other Ruby-throat food sources are being affected not only during spring migration, but also during breeding season, fall migration, and overwintering periods. Looking at more geographically accurate boundaries as shown in Courter et al.'s work would also help give more insight into these trends.
 
 Thanks for checking out my web site!
